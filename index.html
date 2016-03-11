@@ -4,10 +4,8 @@
     <meta charset="utf-8">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>API Reference</title>
+    <title>ReUp API Reference</title>
 
-    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
-    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
     <style>
       .highlight table td { padding: 5px; }
 .highlight table pre { margin: 0; }
@@ -88,10 +86,12 @@
   color: #90a959;
 }
     </style>
+    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
       <script src="javascripts/all.js"></script>
   </head>
 
-  <body class="index" data-languages="[&quot;shell&quot;,&quot;ruby&quot;,&quot;python&quot;]">
+  <body class="index" data-languages="[&quot;php&quot;,&quot;javascript&quot;]">
     <a href="#" id="nav-button">
       <span>
         NAV
@@ -101,9 +101,8 @@
     <div class="tocify-wrapper">
       <img src="images/logo.png" />
         <div class="lang-selector">
-              <a href="#" data-language-name="shell">shell</a>
-              <a href="#" data-language-name="ruby">ruby</a>
-              <a href="#" data-language-name="python">python</a>
+              <a href="#" data-language-name="php">php</a>
+              <a href="#" data-language-name="javascript">javascript</a>
         </div>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
@@ -112,8 +111,7 @@
       <div id="toc">
       </div>
         <ul class="toc-footer">
-            <li><a href='#'>Sign Up for a Developer Key</a></li>
-            <li><a href='https://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
+            <li><a href='http://www.getreup.com'>Sign Up for a ReUp Developer Account</a></li>
         </ul>
     </div>
     <div class="page-wrapper">
@@ -121,226 +119,894 @@
       <div class="content">
         <h1 id="introduction">Introduction</h1>
 
-<p>Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.</p>
-
-<p>We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
-
-<p>This example API documentation page was created with <a href="https://github.com/tripit/slate">Slate</a>. Feel free to edit it and use it as a base for your own API&rsquo;s documentation.</p>
+<p>Welcome to the ReUp Vendor API. Our vendor API is primarily used to enabled point of sale, gift card consumers and other mobile payments platforms to interact with ReUp.  This API follows RPC web service guidelines.  Customers interact with Vendors by showing QR codes which represent their intentions with the vendor.  These QR codes could be part of a ReUp mobile app or on the back of a gift card.</p>
 
 <h1 id="authentication">Authentication</h1>
 
-<blockquote>
-<p>To authorize, use this code:</p>
-</blockquote>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
+<p>ReUp uses a combination of a ReUp API Key and HTTP auth username/password pairings to allow access to the ReUp Vendor API. Please <a href="mailto:hello@getreup.com">email</a> to apply for an account.</p>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
+<p>ReUp expects your API key to be included in all API requests to the server in a header that looks like the following:</p>
 
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight shell"><code><span class="c"># With shell, you can just pass the correct header with each request</span>
-curl <span class="s2">"api_endpoint_here"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre>
-
-<blockquote>
-<p>Make sure to replace <code class="prettyprint">meowmeowmeow</code> with your API key.</p>
-</blockquote>
-
-<p>Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our <a href="http://example.com/developers">developer portal</a>.</p>
-
-<p>Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:</p>
-
-<p><code class="prettyprint">Authorization: meowmeowmeow</code></p>
+<p><code class="prettyprint">https://api.getreup.com/client/VX.Y/REUP_API_KEY</code></p>
 
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+You must replace <code>REUP_API_KEY</code> with your personal API key.
 </aside>
 
-<h1 id="kittens">Kittens</h1>
+<p>Along with the API key, you must conform to the HTTP auth flow.  To do this, add your ReUp vendor account username and password to the header of each request.</p>
 
-<h2 id="get-all-kittens">Get All Kittens</h2>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
+<h1 id="json-rpc">JSON RPC</h1>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span>
-</code></pre>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
+<blockquote>
+<p>A typical request:</p>
+</blockquote>
+<pre class="highlight php"><code>$APIURL              = "https://api.getreup.com/client/VX.Y/" . $REUP_API_KEY
+$postData            = new stdClass();
+$postData-&gt;jsonrpc   = "2.0";
+$postData-&gt;method    = "method_name";
+$postData-&gt;params    = array("var1", "var2");
+$postData-&gt;id        = 1;
 
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</code></pre>
-<pre class="highlight shell"><code>curl <span class="s2">"http://example.com/api/kittens"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
+curl_setopt($ch, CURLOPT_URL, $APIURL);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_TIMEOUT, '5');
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+curl_setopt($ch, CURLOPT_USERAGENT,'ReUpScanner');
+
+curl_setopt($ch, CURLOPT_USERPWD, $user . ":" . $pass);
+
+$content = trim(curl_exec($ch));
+
+curl_close($ch);
 </code></pre>
 
 <blockquote>
-<p>The above command returns JSON structured like this:</p>
+<p>Make sure to replace <code class="prettyprint">method_name</code> with a method name and <code class="prettyprint">array(&quot;var1&quot;, &quot;var2&quot;)</code> with parameters outlined in following sections.</p>
 </blockquote>
-<pre class="highlight json"><code><span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fluffums"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"calico"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">]</span><span class="w">
-</span></code></pre>
 
-<p>This endpoint retrieves all kittens.</p>
-
-<h3 id="http-request">HTTP Request</h3>
-
-<p><code class="prettyprint">GET http://example.com/api/kittens</code></p>
-
-<h3 id="query-parameters">Query Parameters</h3>
+<p>The ReUp Vendor API deploys the JSON RPC standard for all requests.  Each request requires the POST body to be in the format of:</p>
 
 <table><thead>
 <tr>
-<th>Parameter</th>
-<th>Default</th>
+<th>Key</th>
+<th>Type</th>
 <th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>include_cats</td>
-<td>false</td>
-<td>If set to true, the result will also include cats.</td>
+<td>jsonrpc</td>
+<td>string</td>
+<td>Always pass 2.0 here.</td>
 </tr>
 <tr>
-<td>available</td>
-<td>true</td>
-<td>If set to false, the result will include kittens that have already been adopted.</td>
+<td>method</td>
+<td>string</td>
+<td>The method name for this request.</td>
+</tr>
+<tr>
+<td>params</td>
+<td>array</td>
+<td>An array of parameters for this method.</td>
+</tr>
+<tr>
+<td>id</td>
+<td>string</td>
+<td>For debugging purposes only. Whatever is passed in here is also returned.</td>
 </tr>
 </tbody></table>
 
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
+<h1 id="qr-codes">QR Codes</h1>
 
-<h2 id="get-a-specific-kitten">Get a Specific Kitten</h2>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
+<p>ReUp uses various QR codes to allow users to communicate their intention to the vendors.  Each QR code is a JSON object encoded in base 64.</p>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
+<h2 id="use-credit">Use Credit</h2>
 
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight shell"><code>curl <span class="s2">"http://example.com/api/kittens/2"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
+<p>When customers want to use the credit from their account, they will reveal their &ldquo;Use Credit QR Code&rdquo;, which consists of the following.</p>
+
+<p><img alt="Use Credit QR Code" src="images/UseCreditQRCode.png" /></p>
+
+<p>Base 64 Encoded:</p>
+
+<p>e+KAnFXigJ064oCcMTAwMOKAnSzigJxI4oCdOuKAnDZhNTJjMDZiOTDigJ0s
+4oCcVOKAnTrigJw1LjAw4oCdLOKAnFRU4oCdOuKAnETigJ19</p>
+
+<p>Base 64 Decoded:</p>
+
+<p>{&ldquo;U&rdquo;:&ldquo;1000&rdquo;,&ldquo;H&rdquo;:&ldquo;6a52c06b90&rdquo;,&ldquo;T&rdquo;:&ldquo;5.00&rdquo;,&ldquo;TT&rdquo;:&ldquo;D&rdquo;}</p>
+
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>U</td>
+<td>User ID</td>
+<td>The user ID.</td>
+</tr>
+<tr>
+<td>AppID</td>
+<td>App ID</td>
+<td>The app ID the user is using.</td>
+</tr>
+<tr>
+<td>H</td>
+<td>Hash</td>
+<td>A hash unique to this vendor and user pairing.</td>
+</tr>
+<tr>
+<td>T</td>
+<td>Tip Amount</td>
+<td>The amount the user has chosen to tip.  This may be a percentage or dollar amount.</td>
+</tr>
+<tr>
+<td>TT</td>
+<td>Tip Type</td>
+<td>The type of tip the user has selected. Either &ldquo;P&rdquo; for percentage or &ldquo;D&rdquo; for dollar amount.</td>
+</tr>
+</tbody></table>
+
+<h2 id="redeem-reward">Redeem Reward</h2>
+
+<p>The &ldquo;Redeem Reward QR Code&rdquo; is used by customers wishing to redeem for a reward.  They would select a reward from a list of ReUp rewards and show the presented QR code as follows.</p>
+
+<p><img alt="Redeem Reward QR Code" src="images/RedeemRewardQRCode.png" /></p>
+
+<p>Base 64 Encoded:</p>
+
+<p>eyJVIjoiMTAwMCIsIkFwcElEIjoiYWJjMTIiLCJUIjo
+iVSIsIlIiOiIxMjMiLCJIIjoiNmE1MmMwNmI5MCJ9</p>
+
+<p>Base 64 Decoded:</p>
+
+<p>{&ldquo;U&rdquo;:&ldquo;1000&rdquo;,&ldquo;AppID&rdquo;:&ldquo;abc12&rdquo;,&ldquo;T&rdquo;:&ldquo;U&rdquo;,&ldquo;R&rdquo;:&ldquo;123&rdquo;,&ldquo;H&rdquo;:&ldquo;6a52c06b90&rdquo;}</p>
+
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>U</td>
+<td>User ID</td>
+<td>The user ID.</td>
+</tr>
+<tr>
+<td>AppID</td>
+<td>App ID</td>
+<td>The app ID the user is using.</td>
+</tr>
+<tr>
+<td>R</td>
+<td>Reward ID</td>
+<td>The reward ID the user wishes to redeem points for.</td>
+</tr>
+<tr>
+<td>H</td>
+<td>Hash</td>
+<td>A hash unique to this vendor and user.</td>
+</tr>
+</tbody></table>
+
+<h2 id="gift-card">Gift Card</h2>
+
+<p>The &ldquo;Gift Card QR Code&rdquo; is on the back of all ReUp gift cards.  With this code, gift card wielding customers can show it to the vendor to redeem rewards, use credit and add credit to their account.  This is explained in later sections.</p>
+
+<p><img alt="Gift Card QR Code" src="images/GiftCardQRCode.png" /></p>
+
+<p>Base 64 Encoded:</p>
+
+<p>eyJVIjoiMTAwMCIsIlQiOiJHQyIsIkgiOiI2YTUyYzA2YjkwIn0=</p>
+
+<p>Base 64 Decoded:</p>
+
+<p>{&ldquo;U&rdquo;:&ldquo;1000&rdquo;,&ldquo;T&rdquo;:&ldquo;GC&rdquo;,&ldquo;H&rdquo;:&ldquo;6a52c06b90&rdquo;}</p>
+
+<table><thead>
+<tr>
+<th>Key</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>U</td>
+<td>User ID</td>
+<td>The gift card ID.</td>
+</tr>
+<tr>
+<td>T</td>
+<td>Type</td>
+<td>Always &ldquo;GC&rdquo; to signify that this is a gift card and not a mobile app user.</td>
+</tr>
+<tr>
+<td>H</td>
+<td>Hash</td>
+<td>A hash unique to this vendor and gift card.</td>
+</tr>
+</tbody></table>
+
+<h1 id="retrieving-user-info">Retrieving User Info</h1>
+
+<h2 id="get-user">Get User</h2>
+<pre class="highlight php"><code>$APIURL              = "https://api.getreup.com/client/VX.Y/" . $REUP_API_KEY
+$postData            = new stdClass();
+$postData-&gt;jsonrpc   = "2.0";
+$postData-&gt;method    = "GetUser";
+$postData-&gt;params    = array();
+$postData-&gt;id        = 1;
+
+curl_setopt($ch, CURLOPT_URL, $APIURL);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_TIMEOUT, '5');
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+curl_setopt($ch, CURLOPT_USERAGENT,'ReUpScanner');
+
+curl_setopt($ch, CURLOPT_USERPWD, $user . ":" . $pass);
+
+$content = trim(curl_exec($ch));
+
+curl_close($ch);
 </code></pre>
 
 <blockquote>
 <p>The above command returns JSON structured like this:</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Max"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+  </span><span class="nt">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"code"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"No Error"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"usermsg"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"UserID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"22"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"UserName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"some_vendor@email.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"FirstName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"John"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"LastName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Doe"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"DOB"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1984-01-25"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"Verified"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"AppStoreURL"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"PlayStoreURL"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"Hash"</span><span class="p">:</span><span class="w"> </span><span class="s2">"ab7111fd19"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"Profile"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0422658920288</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"ID"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-<p>This endpoint retrieves a specific kitten.</p>
-
-<aside class="warning">Inside HTML code blocks like this one, you can&rsquo;t use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
+<p>This endpoint retrieves details about the vendor user. It is also used to validate login. If user&rsquo;s credentials are deemed correct, store their ReUp API key, username and password in keychain for future calls.</p>
 
 <h3 id="http-request">HTTP Request</h3>
 
-<p><code class="prettyprint">GET http://example.com/kittens/&lt;ID&gt;</code></p>
+<p><code class="prettyprint">GET https://api.getreup.com/client/VX.Y/REUP_API_KEY</code></p>
 
-<h3 id="url-parameters">URL Parameters</h3>
+<h3 id="json-method-name">JSON Method Name</h3>
+
+<p><code class="prettyprint">GetUser</code></p>
+
+<h3 id="json-parameters">JSON Parameters</h3>
+
+<p>This method takes zero parameters.</p>
+
+<h2 id="get-gift-card-user">Get Gift Card User</h2>
+<pre class="highlight php"><code>$APIURL              = "https://api.getreup.com/client/VX.Y/" . $REUP_API_KEY
+$postData            = new stdClass();
+$postData-&gt;jsonrpc   = "2.0";
+$postData-&gt;method    = "GetUser";
+$postData-&gt;params    = array(0=&gt;"User ID");
+$postData-&gt;id        = 1;
+
+curl_setopt($ch, CURLOPT_URL, $APIURL);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_TIMEOUT, '5');
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+curl_setopt($ch, CURLOPT_USERAGENT,'ReUpScanner');
+
+curl_setopt($ch, CURLOPT_USERPWD, $user . ":" . $pass);
+
+$content = trim(curl_exec($ch));
+
+curl_close($ch);
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"code"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"No Error"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"usermsg"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"UserID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10000"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"Credit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5.25"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"Points"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"Profile"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0354671478271</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"ID"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint retrieves a ReUp gift card user.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">GET https://api.getreup.com/client/VX.Y/REUP_API_KEY</code></p>
+
+<h3 id="json-method-name">JSON Method Name</h3>
+
+<p><code class="prettyprint">VendorGetGCUser</code></p>
+
+<h3 id="json-parameters">JSON Parameters</h3>
 
 <table><thead>
 <tr>
-<th>Parameter</th>
+<th>Index</th>
+<th>Name</th>
 <th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>ID</td>
-<td>The ID of the kitten to retrieve</td>
+<td>0</td>
+<td>User ID</td>
+<td>The gift card ID in the QR code.  Decode the &ldquo;Gift Card QR Code&rdquo; and use the value from the &ldquo;U&rdquo; key.</td>
+</tr>
+</tbody></table>
+
+<h1 id="conducting-transactions">Conducting Transactions</h1>
+
+<h2 id="use-credit">Use Credit</h2>
+<pre class="highlight php"><code>$APIURL              = "https://api.getreup.com/client/VX.Y/" . $REUP_API_KEY
+$postData            = new stdClass();
+$postData-&gt;jsonrpc   = "2.0";
+$postData-&gt;method    = "VendorUseCredit";
+$postData-&gt;params    = array(0=&gt;"<span class="nt">&lt;user</span><span class="na">_id</span><span class="nt">&gt;</span>", 1=&gt;"<span class="nt">&lt;amount&gt;</span>", 2=&gt;"U", 3=&gt;"<span class="nt">&lt;user</span><span class="na">_hash</span><span class="nt">&gt;</span>", 4=&gt;"<span class="nt">&lt;tip</span><span class="na">_type</span><span class="nt">&gt;</span>", 5=&gt;"<span class="nt">&lt;tip</span><span class="na">_amount</span><span class="nt">&gt;</span>");
+$postData-&gt;id        = 1;
+
+curl_setopt($ch, CURLOPT_URL, $APIURL);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_TIMEOUT, '5');
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+curl_setopt($ch, CURLOPT_USERAGENT,'ReUpScanner');
+
+curl_setopt($ch, CURLOPT_USERPWD, $user . ":" . $pass);
+
+$content = trim(curl_exec($ch));
+
+curl_close($ch);
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"code"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"No Error"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"usermsg"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"UserName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"some_customer@email.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"CreditUsed"</span><span class="p">:</span><span class="w"> </span><span class="mf">1.1</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"Subtotal"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.00"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"TipTotal"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.1</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"PointsEarned"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"TransactionID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5119"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"FirstName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Stephanie"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"LastName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Rogers"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"CurrentCredit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"19.15"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"CurrentPoints"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"Profile"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.115028142929</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"ID"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint allows the vendor to decrement credit from their customer&rsquo;s ReUp mobile app or ReUp gift card.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">GET https://api.getreup.com/client/VX.Y/REUP_API_KEY</code></p>
+
+<h3 id="json-method-name">JSON Method Name</h3>
+
+<p><code class="prettyprint">VendorUseCredit</code></p>
+
+<h3 id="json-parameters">JSON Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Index</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>0</td>
+<td>User ID</td>
+<td>The user ID in the QR code.  Decode the base 64 QR code and retrieve the value from the &ldquo;U&rdquo; key.</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Amount</td>
+<td>The amount in dollars of credit the customer wishes to use.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>User Type</td>
+<td>For a mobile app user, this is always &ldquo;U&rdquo;.</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Hash</td>
+<td>A hash unique to this vendor and user. Decode the &ldquo;Use Credit QR Code&rdquo; and use the value from the &ldquo;H&rdquo; key.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Tip Type</td>
+<td>This determines the tip type and can be one of two values: &ldquo;P&rdquo; (for percent) and &ldquo;D&rdquo; (for dollars).  Decode the &ldquo;Use Credit QR Code&rdquo; and use the value from the &ldquo;TT&rdquo; key.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Tip Amount</td>
+<td>This is what the user has selected as either the tip amount or percentage. Decode the &ldquo;Use Credit QR Code&rdquo; and use the value from the &ldquo;T&rdquo; key.</td>
+</tr>
+</tbody></table>
+
+<h2 id="redeem-reward">Redeem Reward</h2>
+<pre class="highlight php"><code>$APIURL              = "https://api.getreup.com/client/VX.Y/" . $REUP_API_KEY
+$postData            = new stdClass();
+$postData-&gt;jsonrpc   = "2.0";
+$postData-&gt;method    = "VendorUseCredit";
+$postData-&gt;params    = array(0=&gt;"<span class="nt">&lt;user</span><span class="na">_id</span><span class="nt">&gt;</span>", 1=&gt;"<span class="nt">&lt;reward</span><span class="na">_id</span><span class="nt">&gt;</span>", 2=&gt;"U", 3=&gt;"<span class="nt">&lt;user</span><span class="na">_hash</span><span class="nt">&gt;</span>", 4=&gt;"<span class="nt">&lt;tip</span><span class="na">_type</span><span class="nt">&gt;</span>", 5=&gt;"<span class="nt">&lt;tip</span><span class="na">_amount</span><span class="nt">&gt;</span>");
+$postData-&gt;id        = 1;
+
+curl_setopt($ch, CURLOPT_URL, $APIURL);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_TIMEOUT, '5');
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+curl_setopt($ch, CURLOPT_USERAGENT,'ReUpScanner');
+
+curl_setopt($ch, CURLOPT_USERPWD, $user . ":" . $pass);
+
+$content = trim(curl_exec($ch));
+
+curl_close($ch);
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"code"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"No Error"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"usermsg"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"UserName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"customer_email@email.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"PointsUsed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"TransactionID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5120"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"FirstName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Stephanie"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"LastName"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Rogers"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"CurrentCredit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"19.15"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"CurrentPoints"</span><span class="p">:</span><span class="w"> </span><span class="s2">"9"</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"Profile"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0647549629211</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"ID"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint allows the vendor to decrement points from their customer&rsquo;s ReUp mobile app or ReUp gift card depending on the number of points the requested reward costs.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">GET https://api.getreup.com/client/VX.Y/REUP_API_KEY</code></p>
+
+<h3 id="json-method-name">JSON Method Name</h3>
+
+<p><code class="prettyprint">VendorRedeemReward</code></p>
+
+<h3 id="json-parameters">JSON Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Index</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>0</td>
+<td>User ID</td>
+<td>The user ID in the QR code. Decode the &ldquo;Redeem Reward QR Code&rdquo; and use the value from the &ldquo;U&rdquo; key.</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Reward ID</td>
+<td>The ID of the reward the user wishes to redeem for. Decode the &ldquo;Redeem Reward QR Code&rdquo; and use the value from the &ldquo;R&rdquo; key.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Type</td>
+<td>For a mobile app user, this is always &ldquo;U&rdquo;.</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Hash</td>
+<td>A hash unique to this vendor and user. Decode the &ldquo;Redeem Reward QR Code&rdquo; and use the value from the &ldquo;H&rdquo; key.</td>
+</tr>
+</tbody></table>
+
+<h2 id="add-credit-to-gift-card">Add Credit to Gift Card</h2>
+<pre class="highlight php"><code>$APIURL              = "https://api.getreup.com/client/VX.Y/" . $REUP_API_KEY
+$postData            = new stdClass();
+$postData-&gt;jsonrpc   = "2.0";
+$postData-&gt;method    = "VendorUseCredit";
+$postData-&gt;params    = array(0=&gt;"<span class="nt">&lt;user</span><span class="na">_id</span><span class="nt">&gt;</span>", 1=&gt;"<span class="nt">&lt;amount&gt;</span>", 2=&gt;"giftcard", 3=&gt;"<span class="nt">&lt;user</span><span class="na">_hash</span><span class="nt">&gt;</span>");
+$postData-&gt;id        = 1;
+
+curl_setopt($ch, CURLOPT_URL, $APIURL);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_TIMEOUT, '5');
+
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+curl_setopt($ch, CURLOPT_USERAGENT,'ReUpScanner');
+
+curl_setopt($ch, CURLOPT_USERPWD, $user . ":" . $pass);
+
+$content = trim(curl_exec($ch));
+
+curl_close($ch);
+</code></pre>
+
+<blockquote>
+<p>The above command returns JSON structured like this:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"jsonrpc"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2.0"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"code"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"No Error"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"usermsg"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"result"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"TransactionID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5116"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"UserID"</span><span class="p">:</span><span class="w"> </span><span class="s2">"10000"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"Credit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"5.00"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"Subtotal"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.00"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"TipTotal"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.00"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"Tip"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.00"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"TipType"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"Points"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"IsCredit"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"Source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"Timestamp"</span><span class="p">:</span><span class="w"> </span><span class="s2">"2015-08-17 01:24:56"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"Refunded"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"RewardID"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"RewardName"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nt">"info"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"Profile"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0668139457703</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"ID"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint allows the vendor to add credit to a ReUp gift card.  It is recommended that this capability be protected behind a second locking mechanism, like a PIN, to prevent the vendor&rsquo;s employees from taking advantage of the service.</p>
+
+<h3 id="http-request">HTTP Request</h3>
+
+<p><code class="prettyprint">GET https://api.getreup.com/client/VX.Y/REUP_API_KEY</code></p>
+
+<h3 id="json-method-name">JSON Method Name</h3>
+
+<p><code class="prettyprint">VendorAddCreditGiftCard</code></p>
+
+<h3 id="json-parameters">JSON Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Index</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>0</td>
+<td>User ID</td>
+<td>The user ID in the QR code.  Decode the &ldquo;Gift Card QR Code&rdquo; and retrieve the value from the &ldquo;U&rdquo; key.</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Amount</td>
+<td>The amount in dollars of credit the vendor wishes to add to this gift card.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>User Type</td>
+<td>For a gift card, this is always &ldquo;giftcard&rdquo;.</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Hash</td>
+<td>A hash unique to this vendor and user. Decode the &ldquo;Gift Card QR Code&rdquo; and retrieve the value from the &ldquo;H&rdquo; key.</td>
 </tr>
 </tbody></table>
 
           <h1 id="errors">Errors</h1>
 
-<aside class="notice">This error section is stored in a separate file in `includes/_errors.md`. Slate allows you to optionally separate out your docs into many files&hellip;just save them to the `includes` folder and add them to the top of your `index.md`&rsquo;s frontmatter. Files are included in the order listed.</aside>
-
-<p>The Kittn API uses the following error codes:</p>
+<p>The ReUp Vendor API uses the following error codes:</p>
 
 <table><thead>
 <tr>
 <th>Error Code</th>
-<th>Meaning</th>
+<th>String</th>
+<th>Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>400</td>
-<td>Bad Request &ndash; Your request sucks</td>
+<td>1</td>
+<td>ERROR_NEW_VERSION</td>
+<td>A soft update is available.</td>
 </tr>
 <tr>
-<td>401</td>
-<td>Unauthorized &ndash; Your API key is wrong</td>
+<td>0</td>
+<td>ERROR_NONE</td>
+<td>No error.</td>
 </tr>
 <tr>
-<td>403</td>
-<td>Forbidden &ndash; The kitten requested is hidden for administrators only</td>
+<td>-1</td>
+<td>ERROR_INVALID_LOGIN</td>
+<td>Login username/password incorrect.</td>
 </tr>
 <tr>
-<td>404</td>
-<td>Not Found &ndash; The specified kitten could not be found</td>
+<td>-2</td>
+<td>ERROR_LOGIN_MISMATCH</td>
+<td>Login username/password incorrect.</td>
 </tr>
 <tr>
-<td>405</td>
-<td>Method Not Allowed &ndash; You tried to access a kitten with an invalid method</td>
+<td>-3</td>
+<td>ERROR_NO_ACCOUNT_FOUND</td>
+<td>User ID not found.</td>
 </tr>
 <tr>
-<td>406</td>
-<td>Not Acceptable &ndash; You requested a format that isn&rsquo;t json</td>
+<td>-4</td>
+<td>ERROR_USERNAME_EXISTS</td>
+<td>Username already exists.</td>
 </tr>
 <tr>
-<td>410</td>
-<td>Gone &ndash; The kitten requested has been removed from our servers</td>
+<td>-5</td>
+<td>ERROR_BAD_REQUEST</td>
+<td>Malformed request.</td>
 </tr>
 <tr>
-<td>418</td>
-<td>I&rsquo;m a teapot</td>
+<td>-6</td>
+<td>ERROR_SERVER_ERROR</td>
+<td>Server error.</td>
 </tr>
 <tr>
-<td>429</td>
-<td>Too Many Requests &ndash; You&rsquo;re requesting too many kittens! Slow down!</td>
+<td>-7</td>
+<td>ERROR_NO_FUNCTION</td>
+<td>Method name is incorrect.</td>
 </tr>
 <tr>
-<td>500</td>
-<td>Internal Server Error &ndash; We had a problem with our server. Try again later.</td>
+<td>-8</td>
+<td>ERROR_PW_CHANGE</td>
+<td>Error changing password.</td>
 </tr>
 <tr>
-<td>503</td>
-<td>Service Unavailable &ndash; We&rsquo;re temporarially offline for maintanance. Please try again later.</td>
+<td>-9</td>
+<td>ERROR_NO_HTTPS</td>
+<td>HTTPS is not being used.</td>
+</tr>
+<tr>
+<td>-10</td>
+<td>ERROR_AUTH_FAIL</td>
+<td>Login username/password incorrect.</td>
+</tr>
+<tr>
+<td>-11</td>
+<td>ERROR_NSF</td>
+<td>Customer does not have sufficient credit.</td>
+</tr>
+<tr>
+<td>-12</td>
+<td>ERROR_NSP</td>
+<td>Customer does not have sufficient points.</td>
+</tr>
+<tr>
+<td>-13</td>
+<td>ERROR_NO_CONFIG</td>
+<td>Config is invalid.</td>
+</tr>
+<tr>
+<td>-14</td>
+<td>ERROR_ZIP</td>
+<td>Error zipping file.</td>
+</tr>
+<tr>
+<td>-15</td>
+<td>ERROR_OPEN_DIR</td>
+<td>Error opening directory.</td>
+</tr>
+<tr>
+<td>-16</td>
+<td>ERROR_EMAIL_FORMAT</td>
+<td>Email is malformed.</td>
+</tr>
+<tr>
+<td>-17</td>
+<td>ERROR_EMAIL_DOMAIN</td>
+<td>Email domain does not exist.</td>
+</tr>
+<tr>
+<td>-18</td>
+<td>ERROR_NON_ADMIN</td>
+<td>Vendor does not have access to this feature.</td>
+</tr>
+<tr>
+<td>-19</td>
+<td>ERROR_NEG_TRANS</td>
+<td>Vendor cannot use negative credit.</td>
+</tr>
+<tr>
+<td>-20</td>
+<td>ERROR_STRIPE</td>
+<td>Error with stripe processing.</td>
+</tr>
+<tr>
+<td>-21</td>
+<td>ERROR_INCORRECT_LOGIN</td>
+<td>Login username/password incorrect.</td>
+</tr>
+<tr>
+<td>-22</td>
+<td>ERROR_NO_SUCH_USER</td>
+<td>Login username/password incorrect, or user ID does not exist.</td>
+</tr>
+<tr>
+<td>-23</td>
+<td>ERROR_NOT_VERIFIED</td>
+<td>User has not verified their account.</td>
+</tr>
+<tr>
+<td>-24</td>
+<td>ERROR_ALREADY_VERIFIED</td>
+<td>User already verified their account.</td>
+</tr>
+<tr>
+<td>-25</td>
+<td>ERROR_NON_POST</td>
+<td>Non post request used.</td>
+</tr>
+<tr>
+<td>-26</td>
+<td>ERROR_APP_DISABLED</td>
+<td>App or API has been disabled.</td>
+</tr>
+<tr>
+<td>-27</td>
+<td>ERROR_NOT_SUPPORTED</td>
+<td>App or API is not supported.</td>
+</tr>
+<tr>
+<td>-28</td>
+<td>ERROR_NEW_CONFIG</td>
+<td>New config available for download.</td>
+</tr>
+<tr>
+<td>-29</td>
+<td>ERROR_NO_CONFIG_FOLDERS</td>
+<td>No folder for config.</td>
+</tr>
+<tr>
+<td>-30</td>
+<td>ERROR_NO_CONFIG_FILE</td>
+<td>No config file present.</td>
+</tr>
+<tr>
+<td>-31</td>
+<td>ERROR_NO_REWARD</td>
+<td>No reward by this ID.</td>
+</tr>
+<tr>
+<td>-32</td>
+<td>ERROR_WRONG_APP</td>
+<td>User does not belong to this app.</td>
+</tr>
+<tr>
+<td>-33</td>
+<td>ERROR_GC_ADD_CREDIT</td>
+<td>Error adding credit to gift card.</td>
+</tr>
+<tr>
+<td>-34</td>
+<td>ERROR_QR_CODE_HASH</td>
+<td>Hash is invalid.</td>
+</tr>
+<tr>
+<td>-35</td>
+<td>ERROR_NON_GC_TRANS</td>
+<td>User ID is not a gift card.</td>
+</tr>
+<tr>
+<td>-36</td>
+<td>ERROR_NEGATIVE_TIP</td>
+<td>Cannot use negative tip.</td>
+</tr>
+<tr>
+<td>-37</td>
+<td>ERROR_INVALID_GC</td>
+<td>Invalid gift card.</td>
+</tr>
+<tr>
+<td>-38</td>
+<td>ERROR_INVALID_GC_PIN</td>
+<td>Invalid gift card PIN.</td>
+</tr>
+<tr>
+<td>-39</td>
+<td>ERROR_PAYPAL_AUTH</td>
+<td>PayPal authorization failed.</td>
+</tr>
+<tr>
+<td>-40</td>
+<td>ERROR_PAYPAL_PAYMENT&rsquo;)</td>
+<td>PayPal payment failed.</td>
+</tr>
+<tr>
+<td>-41</td>
+<td>ERROR_UNKNOWN_PAYTYPE&rsquo;)</td>
+<td>Unknown payment type.</td>
+</tr>
+<tr>
+<td>-42</td>
+<td>ERROR_INVALID_PAYOBJECT&rsquo;)</td>
+<td>Invalid pay object.</td>
+</tr>
+<tr>
+<td>-43</td>
+<td>ERROR_NO_GATEWAY&rsquo;)</td>
+<td>No gateway defined.</td>
 </tr>
 </tbody></table>
 
       </div>
       <div class="dark-box">
           <div class="lang-selector">
-                <a href="#" data-language-name="shell">shell</a>
-                <a href="#" data-language-name="ruby">ruby</a>
-                <a href="#" data-language-name="python">python</a>
+                <a href="#" data-language-name="php">php</a>
+                <a href="#" data-language-name="javascript">javascript</a>
           </div>
       </div>
     </div>
