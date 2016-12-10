@@ -360,7 +360,7 @@ html, body {
     padding-bottom: 0.5em;
     border-bottom: 1px solid #ccc;
     margin-bottom: $h1-margin-bottom;
-    margin-top: 2em;
+    margin-top: 47px;
     border-top: 1px solid #ddd;
     background-image: linear-gradient(to bottom, #fff, #f9f9f9);
   }
@@ -485,6 +485,19 @@ html, body {
       background-color: $aside-success-bg;
       text-shadow: 0 1px 0 lighten($aside-success-bg, 15%);
     }
+
+    &.update {
+      background-color: $aside-warning-bg;
+      text-shadow: 0 1px 0 lighten($aside-warning-bg, 15%);
+      margin-top: 0px;
+      margin-bottom: 0px;
+      margin-right: 0px;
+      z-index: 100;
+      position: fixed;
+      top: 0px;
+      width: 100%;
+    }
+
   }
 
   aside:before {
@@ -498,6 +511,10 @@ html, body {
   }
 
   aside.warning:before {
+    @extend %icon-exclamation-sign;
+  }
+
+  aside.update:before {
     @extend %icon-exclamation-sign;
   }
 
