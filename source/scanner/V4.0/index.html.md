@@ -71,24 +71,48 @@ curl_close($ch);
 
 ```javascript
 
-fetch('./api/some.json')
-  .then(
-    function(response) {
-      if (response.status !== 200) {
-        console.log('Looks like there was a problem. Status Code: ' +
-          response.status);
-        return;
-      }
+// subdomain, username, password are selected by merchant during sign up
+var subdomain        = "<your subdomain>";
+var username         = "<username>";
+var password         = "<password>";
+var token            = 'Basic ' + window.btoa(username + ':' + password);
 
-      // Examine the text in the response
-      response.json().then(function(data) {
-        console.log(data);
-      });
-    }
-  )
-  .catch(function(err) {
-    console.log('Fetch Error :-S', err);
+// setup the request
+var apiURL           = "https://api.getreup.com/scanner/V4.0/" + subdomain;
+var postData         = {}            
+postData.jsonrpc     = "2.0";
+postData.method      = "method_name";
+postData.params      = ["<var1>", "<var2>", ...];
+postData.id          = 1;
+var headers          = {
+                         'Accept': 'application/json',
+                         'Content-Type': 'application/json',
+                         'Authorization': token
+                       };
+
+// execute the fetch API call
+fetch(apiURL, {
+	method: 'post',
+  headers: headers,
+	body: JSON.stringify(postData)
+}).then(function(response)
+{
+  if (response.status !== 200)
+  {
+    console.log('Looks like there was a problem. Status Code: ' +
+      response.status);
+    return;
+  }
+
+  // Examine the text in the response
+  response.json().then(function(data)
+  {
+    console.log(data);
   });
+}).catch(function(err)
+{
+  console.log('Fetch Error :-S', err);
+});
 
 ```
 
@@ -212,6 +236,53 @@ curl_close($ch);
 
 ```
 
+```javascript
+
+// subdomain, username, password are selected by merchant during sign up
+var subdomain        = "<your subdomain>";
+var username         = "<username>";
+var password         = "<password>";
+var token            = 'Basic ' + window.btoa(username + ':' + password);
+
+// setup the request
+var apiURL           = "https://api.getreup.com/scanner/V4.0/" + subdomain;
+var postData         = {}            
+postData.jsonrpc     = "2.0";
+postData.method      = "GetUser";
+postData.params      = [];
+postData.id          = 1;
+var headers          = {
+                         'Accept': 'application/json',
+                         'Content-Type': 'application/json',
+                         'Authorization': token
+                       };
+
+// execute the fetch API call
+fetch(apiURL, {
+	method: 'post',
+  headers: headers,
+	body: JSON.stringify(postData)
+}).then(function(response)
+{
+  if (response.status !== 200)
+  {
+    console.log('Looks like there was a problem. Status Code: ' +
+      response.status);
+    return;
+  }
+
+  // Examine the text in the response
+  response.json().then(function(data)
+  {
+    console.log(data);
+  });
+}).catch(function(err)
+{
+  console.log('Fetch Error :-S', err);
+});
+
+```
+
 > The above command returns JSON structured like this:
 
 ```json
@@ -286,6 +357,53 @@ $content = trim(curl_exec($ch));
 curl_close($ch);
 
 ?>
+
+```
+
+```javascript
+
+// subdomain, username, password are selected by merchant during sign up
+var subdomain        = "<your subdomain>";
+var username         = "<username>";
+var password         = "<password>";
+var token            = 'Basic ' + window.btoa(username + ':' + password);
+
+// setup the request
+var apiURL           = "https://api.getreup.com/scanner/V4.0/" + subdomain;
+var postData         = {}            
+postData.jsonrpc     = "2.0";
+postData.method      = "GetRewards";
+postData.params      = [];
+postData.id          = 1;
+var headers          = {
+                         'Accept': 'application/json',
+                         'Content-Type': 'application/json',
+                         'Authorization': token
+                       };
+
+// execute the fetch API call
+fetch(apiURL, {
+	method: 'post',
+  headers: headers,
+	body: JSON.stringify(postData)
+}).then(function(response)
+{
+  if (response.status !== 200)
+  {
+    console.log('Looks like there was a problem. Status Code: ' +
+      response.status);
+    return;
+  }
+
+  // Examine the text in the response
+  response.json().then(function(data)
+  {
+    console.log(data);
+  });
+}).catch(function(err)
+{
+  console.log('Fetch Error :-S', err);
+});
 
 ```
 
@@ -376,6 +494,53 @@ curl_close($ch);
 
 ```
 
+```javascript
+
+// subdomain, username, password are selected by merchant during sign up
+var subdomain        = "<your subdomain>";
+var username         = "<username>";
+var password         = "<password>";
+var token            = 'Basic ' + window.btoa(username + ':' + password);
+
+// setup the request
+var apiURL           = "https://api.getreup.com/scanner/V4.0/" + subdomain;
+var postData         = {}            
+postData.jsonrpc     = "2.0";
+postData.method      = "GetGCUser";
+postData.params      = ["<user_id>", "<hash>"];
+postData.id          = 1;
+var headers          = {
+                         'Accept': 'application/json',
+                         'Content-Type': 'application/json',
+                         'Authorization': token
+                       };
+
+// execute the fetch API call
+fetch(apiURL, {
+	method: 'post',
+  headers: headers,
+	body: JSON.stringify(postData)
+}).then(function(response)
+{
+  if (response.status !== 200)
+  {
+    console.log('Looks like there was a problem. Status Code: ' +
+      response.status);
+    return;
+  }
+
+  // Examine the text in the response
+  response.json().then(function(data)
+  {
+    console.log(data);
+  });
+}).catch(function(err)
+{
+  console.log('Fetch Error :-S', err);
+});
+
+```
+
 > The above command returns JSON structured like this:
 
 ```json
@@ -450,6 +615,53 @@ $content = trim(curl_exec($ch));
 curl_close($ch);
 
 ?>
+
+```
+
+```javascript
+
+// subdomain, username, password are selected by merchant during sign up
+var subdomain        = "<your subdomain>";
+var username         = "<username>";
+var password         = "<password>";
+var token            = 'Basic ' + window.btoa(username + ':' + password);
+
+// setup the request
+var apiURL           = "https://api.getreup.com/scanner/V4.0/" + subdomain;
+var postData         = {}            
+postData.jsonrpc     = "2.0";
+postData.method      = "UseCredit";
+postData.params      = ["<user_id>", "<amount>", "<user_type>", "<hash>", "<tip_type>", "<tip_value>"];
+postData.id          = 1;
+var headers          = {
+                         'Accept': 'application/json',
+                         'Content-Type': 'application/json',
+                         'Authorization': token
+                       };
+
+// execute the fetch API call
+fetch(apiURL, {
+	method: 'post',
+  headers: headers,
+	body: JSON.stringify(postData)
+}).then(function(response)
+{
+  if (response.status !== 200)
+  {
+    console.log('Looks like there was a problem. Status Code: ' +
+      response.status);
+    return;
+  }
+
+  // Examine the text in the response
+  response.json().then(function(data)
+  {
+    console.log(data);
+  });
+}).catch(function(err)
+{
+  console.log('Fetch Error :-S', err);
+});
 
 ```
 
@@ -539,6 +751,53 @@ curl_close($ch);
 
 ```
 
+```javascript
+
+// subdomain, username, password are selected by merchant during sign up
+var subdomain        = "<your subdomain>";
+var username         = "<username>";
+var password         = "<password>";
+var token            = 'Basic ' + window.btoa(username + ':' + password);
+
+// setup the request
+var apiURL           = "https://api.getreup.com/scanner/V4.0/" + subdomain;
+var postData         = {}            
+postData.jsonrpc     = "2.0";
+postData.method      = "RedeemReward";
+postData.params      = ["<user_id>", "<reward_id>", "<user_type>", "<hash>"];
+postData.id          = 1;
+var headers          = {
+                         'Accept': 'application/json',
+                         'Content-Type': 'application/json',
+                         'Authorization': token
+                       };
+
+// execute the fetch API call
+fetch(apiURL, {
+	method: 'post',
+  headers: headers,
+	body: JSON.stringify(postData)
+}).then(function(response)
+{
+  if (response.status !== 200)
+  {
+    console.log('Looks like there was a problem. Status Code: ' +
+      response.status);
+    return;
+  }
+
+  // Examine the text in the response
+  response.json().then(function(data)
+  {
+    console.log(data);
+  });
+}).catch(function(err)
+{
+  console.log('Fetch Error :-S', err);
+});
+
+```
+
 > The above command returns JSON structured like this:
 
 ```json
@@ -617,6 +876,53 @@ $content = trim(curl_exec($ch));
 curl_close($ch);
 
 ?>
+
+```
+
+```javascript
+
+// subdomain, username, password are selected by merchant during sign up
+var subdomain        = "<your subdomain>";
+var username         = "<username>";
+var password         = "<password>";
+var token            = 'Basic ' + window.btoa(username + ':' + password);
+
+// setup the request
+var apiURL           = "https://api.getreup.com/scanner/V4.0/" + subdomain;
+var postData         = {}            
+postData.jsonrpc     = "2.0";
+postData.method      = "AddCreditGiftCard";
+postData.params      = ["<user_id>", "<amount>", "<user_type>", "<hash>"];
+postData.id          = 1;
+var headers          = {
+                         'Accept': 'application/json',
+                         'Content-Type': 'application/json',
+                         'Authorization': token
+                       };
+
+// execute the fetch API call
+fetch(apiURL, {
+	method: 'post',
+  headers: headers,
+	body: JSON.stringify(postData)
+}).then(function(response)
+{
+  if (response.status !== 200)
+  {
+    console.log('Looks like there was a problem. Status Code: ' +
+      response.status);
+    return;
+  }
+
+  // Examine the text in the response
+  response.json().then(function(data)
+  {
+    console.log(data);
+  });
+}).catch(function(err)
+{
+  console.log('Fetch Error :-S', err);
+});
 
 ```
 
@@ -710,6 +1016,53 @@ curl_close($ch);
 
 ```
 
+```javascript
+
+// subdomain, username, password are selected by merchant during sign up
+var subdomain        = "<your subdomain>";
+var username         = "<username>";
+var password         = "<password>";
+var token            = 'Basic ' + window.btoa(username + ':' + password);
+
+// setup the request
+var apiURL           = "https://api.getreup.com/scanner/V4.0/" + subdomain;
+var postData         = {}            
+postData.jsonrpc     = "2.0";
+postData.method      = "CheckIn";
+postData.params      = ["<user_id>", "<hash>", "<dollar_amount>"];
+postData.id          = 1;
+var headers          = {
+                         'Accept': 'application/json',
+                         'Content-Type': 'application/json',
+                         'Authorization': token
+                       };
+
+// execute the fetch API call
+fetch(apiURL, {
+	method: 'post',
+  headers: headers,
+	body: JSON.stringify(postData)
+}).then(function(response)
+{
+  if (response.status !== 200)
+  {
+    console.log('Looks like there was a problem. Status Code: ' +
+      response.status);
+    return;
+  }
+
+  // Examine the text in the response
+  response.json().then(function(data)
+  {
+    console.log(data);
+  });
+}).catch(function(err)
+{
+  console.log('Fetch Error :-S', err);
+});
+
+```
+
 > The above command returns JSON structured like this:
 
 ```json
@@ -755,5 +1108,3 @@ Index | Name | Description
 0 | User ID | The user ID in the QR code.  Decode the "Gift Card QR Code" and retrieve the value from the "U" key.
 1 | Hash | A hash unique to this merchant and user. Decode the "Gift Card QR Code" and retrieve the value from the "H" key.
 2 | Dollar Amount | The dollar amount this user will earn points on.  The amount of dollars per point is set in the ReUp Dashboard.
-
-
