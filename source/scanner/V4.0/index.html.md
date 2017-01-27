@@ -862,34 +862,34 @@ $postData->method    = "EvaluateReward";
 $postData->params    = array("<user_id>", "<reward_id>", "<user_type>", "<hash>",
                         array(
                           "receipt_datetime" => "2016-11-14T12:31:21+00:00",
-                          "subtotal_amount" => "22.00",
-                          "menu_items" => array(
+                          "subtotal" => "22.00",
+                          "items" => array(
                             array(
-                              "menu_item_type" => "M",
+                              "item_type" => "M",
                               "item_name" => "Steak Burger",
                               "item_qty" => "3",
                               "item_amount" => "24.00",
-                              "menu_item_id" => "2100720",
-                              "menu_family" => "1404",
-                              "menu_major_group" => "1089"
+                              "product_id" => "2100720",
+                              "product_family" => "1404",
+                              "product_group" => "1089"
                             ),
                             array(
-                              "menu_item_type" => "M",
+                              "item_type" => "M",
                               "item_name" => "Veggie Burger",
                               "item_qty" => "2",
                               "item_amount" => "21.00",
-                              "menu_item_id" => "2100722",
-                              "menu_family" => "1404",
-                              "menu_major_group" => "1089"
+                              "product_id" => "2100722",
+                              "product_family" => "1404",
+                              "product_group" => "1089"
                             ),
                             array(
-                              "menu_item_type" => "D",
+                              "item_type" => "D",
                               "item_name" => "$2 Off a $10 Purchase",
                               "item_qty" => 1,
                               "item_amount" => "-2.00",
-                              "menu_item_id" => 10,
-                              "menu_family" => 0,
-                              "menu_major_group" => 0
+                              "product_id" => 10,
+                              "product_family" => 0,
+                              "product_group" => 0
                             )
                           )
                         ));
@@ -928,34 +928,34 @@ postData.method      = "EvaluateReward";
 postData.params      = ["<user_id>", "<reward_id>", "<user_type>", "<hash>",
                         {
                           "receipt_datetime": "2016-11-14T12:31:21+00:00",
-                          "subtotal_amount": "22.00",
-                          "menu_items": [
+                          "subtotal": "22.00",
+                          "items": [
                             {
-                              "menu_item_type": "M",
+                              "item_type": "M",
                               "item_name": "Steak Burger",
                               "item_qty": "3",
                               "item_amount": "24.00",
-                              "menu_item_id": "2100720",
-                              "menu_family": "1404",
-                              "menu_major_group": "1089"
+                              "product_id": "2100720",
+                              "product_family": "1404",
+                              "product_group": "1089"
                             },
                             {
-                              "menu_item_type": "M",
+                              "item_type": "M",
                               "item_name": "Veggie Burger",
                               "item_qty": "2",
                               "item_amount": "21.00",
-                              "menu_item_id": "2100722",
-                              "menu_family": "1404",
-                              "menu_major_group": "1089"
+                              "product_id": "2100722",
+                              "product_family": "1404",
+                              "product_group": "1089"
                             },
                             {
-                              "menu_item_type": "D",
+                              "item_type": "D",
                               "item_name": "$2 Off a $10 Purchase",
                               "item_qty": 1,
                               "item_amount": "-2.00",
-                              "menu_item_id": 10,
-                              "menu_family": 0,
-                              "menu_major_group": 0
+                              "product_id": 10,
+                              "product_family": 0,
+                              "product_group": 0
                             }
                           ]
                         }];
@@ -1050,7 +1050,7 @@ Index | Name | Description
 1 | Reward ID | The ID of the reward the user wishes to redeem for. Decode the "Redeem Reward QR Code" and use the value from the "R" key.
 2 | User Type | For a mobile app user, this is always "U".   For a gift card, this is always "giftcard".
 3 | Hash | A hash unique to this merchant and user. Decode the "Redeem Reward QR Code" and use the value from the "H" key.
-4 | Invoice Details | An object with a key named "menu_items", which is an array of objects each containing at least the keys "menu_item_id" (the SKU), "item_qty" (optional, 1 is used without it), and "item_amount". Feel free to send any additional information in the line items.
+4 | Invoice Details | An object with a key named "items", which is an array of objects each containing at least the keys "product_id" (the SKU), "item_qty" (optional, 1 is used without it), and "item_amount". Feel free to send any additional information in the line items.
 
 ## Add Credit to Gift Card
 
