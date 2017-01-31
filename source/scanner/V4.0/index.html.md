@@ -324,6 +324,182 @@ This endpoint is used to validate the merchant's login information. If credentia
 
 This method takes zero parameters.
 
+## Get Refund Eligible Transactions
+
+```php
+
+<?php
+
+// subdomain, username, password are selected by merchant during sign up
+$subdomain           = "<your subdomain>";
+$user                = "<username>";
+$pass                = "<password>";
+
+// setup the php curl request
+$APIURL              = "https://api.getreup.com/scanner/V4.0/" . $subdomain;
+$postData            = new stdClass();
+$postData->jsonrpc   = "2.0";
+$postData->method    = "GetRefundEligibleTransactions";
+$postData->params    = array("-1", "-1", "-1");
+$postData->id        = 1;
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $APIURL);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+curl_setopt($ch, CURLOPT_USERAGENT, "ReUpScanner API $subdomain");
+curl_setopt($ch, CURLOPT_USERPWD, $user . ":" . $pass);
+
+// execute the php curl request, json response stored in $content
+$content = trim(curl_exec($ch));
+
+curl_close($ch);
+
+?>
+
+```
+
+```javascript
+
+// subdomain, username, password are selected by merchant during sign up
+var subdomain        = "<your subdomain>";
+var username         = "<username>";
+var password         = "<password>";
+var token            = 'Basic ' + window.btoa(username + ':' + password);
+
+// setup the request
+var apiURL           = "https://api.getreup.com/scanner/V4.0/" + subdomain;
+var postData         = {}            
+postData.jsonrpc     = "2.0";
+postData.method      = "GetRefundEligibleTransactions";
+postData.params      = ["-1", "-1", "-1"];
+postData.id          = 1;
+var headers          = {
+                         'Accept': 'application/json',
+                         'Content-Type': 'application/json',
+                         'Authorization': token
+                       };
+
+// execute the fetch API call
+fetch(apiURL, {
+	method: 'post',
+  headers: headers,
+	body: JSON.stringify(postData)
+}).then(function(response)
+{
+  if (response.status !== 200)
+  {
+    console.log('Looks like there was a problem. Status Code: ' +
+      response.status);
+    return;
+  }
+
+  // Examine the text in the response
+  response.json().then(function(data)
+  {
+    console.log(data);
+  });
+}).catch(function(err)
+{
+  console.log('Fetch Error :-S', err);
+});
+
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "error": {
+    "code": 0,
+    "message": "No Error",
+    "usermsg": "",
+    "AppStoreURL": "apple URL",
+    "PlayStoreURL": ""
+  },
+  "result": [
+    {
+      "TransactionID": "90",
+      "RelatedTransactionIDs": "91",
+      "UserID": "1",
+      "Credit": "-59.60",
+      "Subtotal": "-50.00",
+      "TipTotal": "-8.50",
+      "Tip": "17.00",
+      "TipType": "%",
+      "Points": "0",
+      "IsCredit": "1",
+      "Source": "0",
+      "SegmentActionID": "-1",
+      "TransPaymentInfo": null,
+      "Refunded": "0",
+      "RewardID": "",
+      "RewardName": "",
+      "LocationID": "-1",
+      "PassID": "-1",
+      "PassName": "",
+      "PassQuantityRemaining": "-1",
+      "TransactionFee": "0.00",
+      "ServiceFee": "-1.10",
+      "ScannerID": "1",
+      "Timestamp": "2017-01-31 05:03:47"
+    },
+    {
+      "TransactionID": "91",
+      "RelatedTransactionIDs": "90",
+      "UserID": "1",
+      "Credit": "0.00",
+      "Subtotal": "0.00",
+      "TipTotal": "0.00",
+      "Tip": "0.00",
+      "TipType": "",
+      "Points": "62",
+      "IsCredit": "0",
+      "Source": "16",
+      "SegmentActionID": "-1",
+      "TransPaymentInfo": null,
+      "Refunded": "0",
+      "RewardID": "",
+      "RewardName": "",
+      "LocationID": "-1",
+      "PassID": "-1",
+      "PassName": "",
+      "PassQuantityRemaining": "-1",
+      "TransactionFee": "0.00",
+      "ServiceFee": "0.00",
+      "ScannerID": "1",
+      "Timestamp": "2017-01-31 05:03:48"
+    }
+  ],
+  "info": {
+    "Profile": 0.10230684280396
+  },
+  "ID": 1
+}
+```
+
+This endpoint allows the merchant to retrieve transactions that are eligible for refund. A transaction can only be refunded 15 minutes after it is performed. To lift this limit, please contact us.
+
+The transactions can be filtered by a customer's UserID, the scanner's UserID and the LocationID connected to the scanner. All parameters are optional, and can be set to "-1" to be omitted from the filter.
+
+### HTTP Request
+
+`POST https://api.getreup.com/client/V4.0/SUBDOMAIN`
+
+### JSON Method Name
+
+`GetRefundEligibleTransactions`
+
+### JSON Parameters
+
+Index | Name | Description
+--------- | ------- | -----------
+0 | User ID | The user ID in the QR code.  Decode the base 64 QR code and retrieve the value from the "U" key (Optional, set to "-1" otherwise).
+1 | Scanner User ID | The UserID of the scanner, retrieved by GetUser (Optional, set to "-1" otherwise).
+2 | Location ID | The Location ID attached to the scanner (Optional, set to "-1" otherwise).
+
 ## Retrieve List of Rewards
 
 ```php
@@ -714,182 +890,6 @@ Index | Name | Description
 3 | Hash | A hash unique to this merchant and user. Decode the "Use Credit" QR Code and use the value from the "H" key.
 4 | Tip Type | This determines the tip type and can be one of two values: "P" (for percent) and "D" (for dollars).  Decode the "Use Credit QR Code" and use the value from the "TT" key.
 5 | Tip Value | This is what the user has selected as either the tip amount or percentage. Decode the "Use Credit QR Code" and use the value from the "T" key.
-
-## Get Transactions Eligible For Refund
-
-```php
-
-<?php
-
-// subdomain, username, password are selected by merchant during sign up
-$subdomain           = "<your subdomain>";
-$user                = "<username>";
-$pass                = "<password>";
-
-// setup the php curl request
-$APIURL              = "https://api.getreup.com/scanner/V4.0/" . $subdomain;
-$postData            = new stdClass();
-$postData->jsonrpc   = "2.0";
-$postData->method    = "GetRefundEligibleTransactions";
-$postData->params    = array("-1", "-1", "-1");
-$postData->id        = 1;
-
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $APIURL);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-curl_setopt($ch, CURLOPT_POST, 1);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
-curl_setopt($ch, CURLOPT_USERAGENT, "ReUpScanner API $subdomain");
-curl_setopt($ch, CURLOPT_USERPWD, $user . ":" . $pass);
-
-// execute the php curl request, json response stored in $content
-$content = trim(curl_exec($ch));
-
-curl_close($ch);
-
-?>
-
-```
-
-```javascript
-
-// subdomain, username, password are selected by merchant during sign up
-var subdomain        = "<your subdomain>";
-var username         = "<username>";
-var password         = "<password>";
-var token            = 'Basic ' + window.btoa(username + ':' + password);
-
-// setup the request
-var apiURL           = "https://api.getreup.com/scanner/V4.0/" + subdomain;
-var postData         = {}            
-postData.jsonrpc     = "2.0";
-postData.method      = "GetRefundEligibleTransactions";
-postData.params      = ["-1", "-1", "-1"];
-postData.id          = 1;
-var headers          = {
-                         'Accept': 'application/json',
-                         'Content-Type': 'application/json',
-                         'Authorization': token
-                       };
-
-// execute the fetch API call
-fetch(apiURL, {
-	method: 'post',
-  headers: headers,
-	body: JSON.stringify(postData)
-}).then(function(response)
-{
-  if (response.status !== 200)
-  {
-    console.log('Looks like there was a problem. Status Code: ' +
-      response.status);
-    return;
-  }
-
-  // Examine the text in the response
-  response.json().then(function(data)
-  {
-    console.log(data);
-  });
-}).catch(function(err)
-{
-  console.log('Fetch Error :-S', err);
-});
-
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "jsonrpc": "2.0",
-  "error": {
-    "code": 0,
-    "message": "No Error",
-    "usermsg": "",
-    "AppStoreURL": "apple URL",
-    "PlayStoreURL": ""
-  },
-  "result": [
-    {
-      "TransactionID": "90",
-      "RelatedTransactionIDs": "91",
-      "UserID": "1",
-      "Credit": "-59.60",
-      "Subtotal": "-50.00",
-      "TipTotal": "-8.50",
-      "Tip": "17.00",
-      "TipType": "%",
-      "Points": "0",
-      "IsCredit": "1",
-      "Source": "0",
-      "SegmentActionID": "-1",
-      "TransPaymentInfo": null,
-      "Refunded": "0",
-      "RewardID": "",
-      "RewardName": "",
-      "LocationID": "-1",
-      "PassID": "-1",
-      "PassName": "",
-      "PassQuantityRemaining": "-1",
-      "TransactionFee": "0.00",
-      "ServiceFee": "-1.10",
-      "ScannerID": "1",
-      "Timestamp": "2017-01-31 05:03:47"
-    },
-    {
-      "TransactionID": "91",
-      "RelatedTransactionIDs": "90",
-      "UserID": "1",
-      "Credit": "0.00",
-      "Subtotal": "0.00",
-      "TipTotal": "0.00",
-      "Tip": "0.00",
-      "TipType": "",
-      "Points": "62",
-      "IsCredit": "0",
-      "Source": "16",
-      "SegmentActionID": "-1",
-      "TransPaymentInfo": null,
-      "Refunded": "0",
-      "RewardID": "",
-      "RewardName": "",
-      "LocationID": "-1",
-      "PassID": "-1",
-      "PassName": "",
-      "PassQuantityRemaining": "-1",
-      "TransactionFee": "0.00",
-      "ServiceFee": "0.00",
-      "ScannerID": "1",
-      "Timestamp": "2017-01-31 05:03:48"
-    }
-  ],
-  "info": {
-    "Profile": 0.10230684280396
-  },
-  "ID": 1
-}
-```
-
-This endpoint allows the merchant to retrieve transactions that are eligible for refund. A transaction can only be refunded 15 minutes after it is performed. To lift this limit, please contact us.
-
-The transactions can be filtered by a customer's UserID, the scanner's UserID and the LocationID connected to the scanner. All parameters are optional, and can be set to "-1" to be omitted from the filter.
-
-### HTTP Request
-
-`POST https://api.getreup.com/client/V4.0/SUBDOMAIN`
-
-### JSON Method Name
-
-`GetRefundEligibleTransactions`
-
-### JSON Parameters
-
-Index | Name | Description
---------- | ------- | -----------
-0 | User ID | The user ID in the QR code.  Decode the base 64 QR code and retrieve the value from the "U" key (Optional, set to "-1" otherwise).
-1 | Scanner User ID | The UserID of the scanner, retrieved by GetUser (Optional, set to "-1" otherwise).
-2 | Location ID | The Location ID attached to the scanner (Optional, set to "-1" otherwise).
 
 ## Refund Transaction
 
