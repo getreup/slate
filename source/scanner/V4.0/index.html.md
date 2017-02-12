@@ -176,6 +176,28 @@ U | User ID | The user ID, unique to every customer account.
 H | Hash | A unique security hash used to authenticate this customer-merchant pairing.
 R | Reward ID | The reward ID the user wishes to redeem points for.
 
+## Redeem Pass
+
+The "Redeem Pass" QR Code is used by customers wanting to redeem a pass they have purchased. A pass being an item the customer has bought in bulk (think buy 10 coffees for the price of 9, and redeem them at your own pace).  The customer would select a pass from a list of purchased passes in their app and present the QR code, for example:
+
+![Redeem Pass QR Code](scanner/V4.0/RedeemPassQRCode.png)
+
+Above QR Code Source:
+
+eyJBcHBJRCI6IjEyMzQ1IiwiVHlwZSI6InJld2FyZCIsIlUiOiIxMDAwIiwiSCI6IjlhMTIzYTQ0YWIiLCJQIjoiMTIzIn0=
+
+Base 64 Decoded QR Code Source:
+
+{"AppID":"12345","Type":"pass","U":"1000","H":"9a123a44ab","P":"123"}
+
+Key | Name | Description
+--------- | ----------- | -----------
+AppID | App ID | The unique App ID assigned to this app.  Each merchant has an App ID.
+Type | QR Code Type | The type of QR code being scanned (e.g. reward)
+U | User ID | The user ID, unique to every customer account.
+H | Hash | A unique security hash used to authenticate this customer-merchant pairing.
+P | Pass ID | The pass ID the user wishes to redeem.
+
 ## Gift Card
 
 The "Gift Card" QR Code is on the back of every ReUp gift card.  With this code, gift card wielding customers can redeem rewards, use credit and load credit to their account.
@@ -986,62 +1008,71 @@ fetch(apiURL, {
     "AppStoreURL": "apple URL",
     "PlayStoreURL": ""
   },
-  "result": [
-    {
-      "TransactionID": "101",
-      "RelatedTransactionIDs": "100",
-      "UserID": "1",
-      "Credit": "0.00",
-      "Subtotal": "0.00",
-      "TipTotal": "0.00",
-      "Tip": "0.00",
-      "TipType": "",
-      "Points": "4",
-      "IsCredit": "0",
-      "Source": "16",
-      "SegmentActionID": "-1",
-      "TransPaymentInfo": null,
-      "Refunded": "1",
-      "RewardID": "",
-      "RewardName": "",
-      "LocationID": "-1",
-      "PassID": "-1",
-      "PassName": "",
-      "PassQuantityRemaining": "-1",
-      "TransactionFee": "0.00",
-      "ServiceFee": "0.00",
-      "ScannerID": "1",
-      "Timestamp": "2017-01-31 05:16:38"
-    },
-    {
-      "TransactionID": "100",
-      "RelatedTransactionIDs": "101",
-      "UserID": "1",
-      "Credit": "-59.60",
-      "Subtotal": "-50.00",
-      "TipTotal": "-8.50",
-      "Tip": "17.00",
-      "TipType": "%",
-      "Points": "0",
-      "IsCredit": "1",
-      "Source": "0",
-      "SegmentActionID": "-1",
-      "TransPaymentInfo": null,
-      "Refunded": "1",
-      "RewardID": "",
-      "RewardName": "",
-      "LocationID": "-1",
-      "PassID": "-1",
-      "PassName": "",
-      "PassQuantityRemaining": "-1",
-      "TransactionFee": "0.00",
-      "ServiceFee": "-1.10",
-      "ScannerID": "1",
-      "Timestamp": "2017-01-31 05:16:38"
-    }
-  ],
+  "result": {
+    "UserName": "no-reply@getreup.com",
+    "CreditRefunded": "59.60",
+    "PointsRefunded": -5,
+    "FirstName": "ReUp",
+    "LastName": "Scanner",
+    "CurrentCredit": "609.22",
+    "CurrentPoints": "33",
+    "RefundedTransactions": [
+      {
+        "TransactionID": "51",
+        "RelatedTransactionIDs": "50",
+        "UserID": "1",
+        "Credit": "0.00",
+        "Subtotal": "0.00",
+        "TipTotal": "0.00",
+        "Tip": "0.00",
+        "TipType": "",
+        "Points": "5",
+        "IsCredit": "0",
+        "Source": "16",
+        "SegmentActionID": "-1",
+        "TransPaymentInfo": null,
+        "Refunded": "1",
+        "RewardID": "",
+        "RewardName": "",
+        "LocationID": "-1",
+        "PassID": "-1",
+        "PassName": "",
+        "PassQuantityRemaining": "-1",
+        "TransactionFee": "0.00",
+        "ServiceFee": "0.00",
+        "ScannerID": "1",
+        "Timestamp": "2017-02-12 02:13:30"
+      },
+      {
+        "TransactionID": "50",
+        "RelatedTransactionIDs": "51",
+        "UserID": "1",
+        "Credit": "-59.60",
+        "Subtotal": "-50.00",
+        "TipTotal": "-8.50",
+        "Tip": "17.00",
+        "TipType": "%",
+        "Points": "0",
+        "IsCredit": "1",
+        "Source": "0",
+        "SegmentActionID": "-1",
+        "TransPaymentInfo": null,
+        "Refunded": "1",
+        "RewardID": "",
+        "RewardName": "",
+        "LocationID": "-1",
+        "PassID": "-1",
+        "PassName": "",
+        "PassQuantityRemaining": "-1",
+        "TransactionFee": "0.00",
+        "ServiceFee": "-1.10",
+        "ScannerID": "1",
+        "Timestamp": "2017-02-12 02:13:30"
+      }
+    ]
+  },
   "info": {
-    "Profile": 0.63061785697937
+    "Profile": 0.39124202728271
   },
   "ID": 1
 }
@@ -1399,6 +1430,134 @@ Index | Name | Description
 2 | User Type | For a mobile app user, this is always "U".   For a gift card, this is always "giftcard".
 3 | Hash | A hash unique to this merchant and user. Decode the "Redeem Reward QR Code" and use the value from the "H" key.
 4 | Invoice Details | An object with a key named "items", which is an array of objects each containing at least the keys "product_id" (the SKU), "item_qty" (optional, 1 is used without it), and "item_amount". Feel free to send any additional information in the line items.
+
+## Redeem A Pass
+
+```php
+
+<?php
+
+// subdomain, username, password are selected by merchant during sign up
+$subdomain           = "<your subdomain>";
+$user                = "<username>";
+$pass                = "<password>";
+
+// setup the php curl request
+$APIURL              = "https://api.getreup.com/scanner/V4.0/" . $subdomain;
+$postData            = new stdClass();
+$postData->jsonrpc   = "2.0";
+$postData->method    = "RedeemPass";
+$postData->params    = array("<user_id>", "<pass_id>", "<user_type>", "<hash>");
+$postData->id        = 1;
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $APIURL);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+curl_setopt($ch, CURLOPT_USERAGENT, "ReUpScanner API $subdomain");
+curl_setopt($ch, CURLOPT_USERPWD, $user . ":" . $pass);
+
+// execute the php curl request, json response stored in $content
+$content = trim(curl_exec($ch));
+
+curl_close($ch);
+
+?>
+
+```
+
+```javascript
+
+// subdomain, username, password are selected by merchant during sign up
+var subdomain        = "<your subdomain>";
+var username         = "<username>";
+var password         = "<password>";
+var token            = 'Basic ' + window.btoa(username + ':' + password);
+
+// setup the request
+var apiURL           = "https://api.getreup.com/scanner/V4.0/" + subdomain;
+var postData         = {}            
+postData.jsonrpc     = "2.0";
+postData.method      = "RedeemPass";
+postData.params      = ["<user_id>", "<pass_id>", "<user_type>", "<hash>"];
+postData.id          = 1;
+var headers          = {
+                         'Accept': 'application/json',
+                         'Content-Type': 'application/json',
+                         'Authorization': token
+                       };
+
+// execute the fetch API call
+fetch(apiURL, {
+	method: 'post',
+  headers: headers,
+	body: JSON.stringify(postData)
+}).then(function(response)
+{
+  if (response.status !== 200)
+  {
+    console.log('Looks like there was a problem. Status Code: ' +
+      response.status);
+    return;
+  }
+
+  // Examine the text in the response
+  response.json().then(function(data)
+  {
+    console.log(data);
+  });
+}).catch(function(err)
+{
+  console.log('Fetch Error :-S', err);
+});
+
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "error": {
+    "code": 0,
+    "message": "No Error",
+    "usermsg": ""
+  },
+  "result": {
+    "UserName": "customer@domain.com",
+    "PointsUsed": "1",
+    "TransactionID": "5120",
+    "FirstName": "Stephanie",
+    "LastName": "Rogers",
+    "CurrentCredit": "19.15",
+    "CurrentPoints": "9"
+  },
+  "info": {
+    "Profile": 0.0647549629211
+  },
+  "ID": 1
+}
+```
+
+This endpoint allows the merchant to decrement the number of passes remaining from their customer's ReUp mobile app.
+
+### HTTP Request
+
+`POST https://api.getreup.com/client/V4.0/SUBDOMAIN`
+
+### JSON Method Name
+
+`RedeemPass`
+
+### JSON Parameters
+
+Index | Name | Description
+--------- | ------- | -----------
+0 | User ID | The user ID in the QR code. Decode the "Redeem Pass QR Code" and use the value from the "U" key.
+1 | Pass ID | The ID of the pass the user wishes to redeem for. Decode the "Redeem Pass QR Code" and use the value from the "P" key.
+2 | User Type | For a mobile app user, this is always "U".   For a gift card, this is always "giftcard".
+3 | Hash | A hash unique to this merchant and user. Decode the "Redeem Pass QR Code" and use the value from the "H" key.
 
 ## Add Credit to Gift Card
 
