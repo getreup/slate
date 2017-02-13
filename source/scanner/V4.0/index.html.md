@@ -656,6 +656,420 @@ This endpoint returns a list of active rewards set by the merchant.  This is pri
 
 This method takes zero parameters.
 
+## Evaluate A Reward
+
+```php
+
+<?php
+
+// subdomain, username, password are selected by merchant during sign up
+$subdomain           = "<your subdomain>";
+$user                = "<username>";
+$pass                = "<password>";
+
+// setup the php curl request
+$APIURL              = "https://api.getreup.com/scanner/V4.0/" . $subdomain;
+$postData            = new stdClass();
+$postData->jsonrpc   = "2.0";
+$postData->method    = "EvaluateReward";
+$postData->params    = array("<user_id>", "<reward_id>", "<user_type>", "<hash>",
+                        array(
+                          "receipt_datetime" => "2016-11-14T12:31:21+00:00",
+                          "subtotal" => "22.00",
+                          "items" => array(
+                            array(
+                              "item_type" => "M",
+                              "item_name" => "Steak Burger",
+                              "item_qty" => "3",
+                              "item_amount" => "24.00",
+                              "product_id" => "2100720",
+                              "product_family" => "1404",
+                              "product_group" => "1089"
+                            ),
+                            array(
+                              "item_type" => "M",
+                              "item_name" => "Veggie Burger",
+                              "item_qty" => "2",
+                              "item_amount" => "21.00",
+                              "product_id" => "2100722",
+                              "product_family" => "1404",
+                              "product_group" => "1089"
+                            ),
+                            array(
+                              "item_type" => "D",
+                              "item_name" => "$2 Off a $10 Purchase",
+                              "item_qty" => 1,
+                              "item_amount" => "-2.00",
+                              "product_id" => 10,
+                              "product_family" => 0,
+                              "product_group" => 0
+                            )
+                          )
+                        ));
+$postData->id        = 1;
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $APIURL);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+curl_setopt($ch, CURLOPT_USERAGENT, "ReUpScanner API $subdomain");
+curl_setopt($ch, CURLOPT_USERPWD, $user . ":" . $pass);
+
+// execute the php curl request, json response stored in $content
+$content = trim(curl_exec($ch));
+
+curl_close($ch);
+
+?>
+
+```
+
+```javascript
+
+// subdomain, username, password are selected by merchant during sign up
+var subdomain        = "<your subdomain>";
+var username         = "<username>";
+var password         = "<password>";
+var token            = 'Basic ' + window.btoa(username + ':' + password);
+
+// setup the request
+var apiURL           = "https://api.getreup.com/scanner/V4.0/" + subdomain;
+var postData         = {}            
+postData.jsonrpc     = "2.0";
+postData.method      = "EvaluateReward";
+postData.params      = ["<user_id>", "<reward_id>", "<user_type>", "<hash>",
+                        {
+                          "receipt_datetime": "2016-11-14T12:31:21+00:00",
+                          "subtotal": "22.00",
+                          "items": [
+                            {
+                              "item_type": "M",
+                              "item_name": "Steak Burger",
+                              "item_qty": "3",
+                              "item_amount": "24.00",
+                              "product_id": "2100720",
+                              "product_family": "1404",
+                              "product_group": "1089"
+                            },
+                            {
+                              "item_type": "M",
+                              "item_name": "Veggie Burger",
+                              "item_qty": "2",
+                              "item_amount": "21.00",
+                              "product_id": "2100722",
+                              "product_family": "1404",
+                              "product_group": "1089"
+                            },
+                            {
+                              "item_type": "D",
+                              "item_name": "$2 Off a $10 Purchase",
+                              "item_qty": 1,
+                              "item_amount": "-2.00",
+                              "product_id": 10,
+                              "product_family": 0,
+                              "product_group": 0
+                            }
+                          ]
+                        }];
+postData.id          = 1;
+var headers          = {
+                         'Accept': 'application/json',
+                         'Content-Type': 'application/json',
+                         'Authorization': token
+                       };
+
+// execute the fetch API call
+fetch(apiURL, {
+	method: 'post',
+  headers: headers,
+	body: JSON.stringify(postData)
+}).then(function(response)
+{
+  if (response.status !== 200)
+  {
+    console.log('Looks like there was a problem. Status Code: ' +
+      response.status);
+    return;
+  }
+
+  // Examine the text in the response
+  response.json().then(function(data)
+  {
+    console.log(data);
+  });
+}).catch(function(err)
+{
+  console.log('Fetch Error :-S', err);
+});
+
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "error": {
+    "code": 0,
+    "message": "No Error",
+    "usermsg": ""
+  },
+  "result": {
+    "QualifiedDiscounts": [
+      {
+        "Index": 0,
+        "SKU": "2100720",
+        "Discount": "8.00"
+      },
+      {
+        "Index": 1,
+        "SKU": "2100722",
+        "Discount": "10.50"
+      }
+    ],
+    "RewardID": 20,
+    "RewardName": "Test Reward Name",
+    "UserName": "customer@domain.com",
+    "PointsUsed": "1",
+    "FirstName": "Stephanie",
+    "LastName": "Rogers",
+    "Credit": "302.57",
+    "CurrentPoints": "34",
+    "AfterPoints": 14,
+  },
+  "info": {
+    "Profile": 0.0647549629211
+  },
+  "ID": 1
+}
+```
+
+This endpoint allows the merchant to pass in a RewardID along with an invoice and retrieve the potential discounts the user is qualified for. This method does NOT decrement points. Apply the appropriate discount to the invoice and then execute the RedeemReward method.
+
+### HTTP Request
+
+`POST https://api.getreup.com/client/V4.0/SUBDOMAIN`
+
+### JSON Method Name
+
+`EvaluateReward`
+
+### JSON Parameters
+
+Index | Name | Description
+--------- | ------- | -----------
+0 | User ID | The user ID in the QR code. Decode the "Redeem Reward QR Code" and use the value from the "U" key.
+1 | Reward ID | The ID of the reward the user wishes to redeem for. Decode the "Redeem Reward QR Code" and use the value from the "R" key.
+2 | User Type | For a mobile app user, this is always "U".   For a gift card, this is always "giftcard".
+3 | Hash | A hash unique to this merchant and user. Decode the "Redeem Reward QR Code" and use the value from the "H" key.
+4 | Invoice Details | An object with a key named "items", which is an array of objects each containing at least the keys "product_id" (the SKU), "item_qty" (optional, 1 is used without it), and "item_amount". Feel free to send any additional information in the line items.
+
+## Evaluate A Pass
+
+```php
+
+<?php
+
+// subdomain, username, password are selected by merchant during sign up
+$subdomain           = "<your subdomain>";
+$user                = "<username>";
+$pass                = "<password>";
+
+// setup the php curl request
+$APIURL              = "https://api.getreup.com/scanner/V4.0/" . $subdomain;
+$postData            = new stdClass();
+$postData->jsonrpc   = "2.0";
+$postData->method    = "EvaluatePass";
+$postData->params    = array("<user_id>", "<pass_id>", "<user_type>", "<hash>",
+                        array(
+                          "receipt_datetime" => "2016-11-14T12:31:21+00:00",
+                          "subtotal" => "22.00",
+                          "items" => array(
+                            array(
+                              "item_type" => "M",
+                              "item_name" => "Steak Burger",
+                              "item_qty" => "3",
+                              "item_amount" => "24.00",
+                              "product_id" => "2100720",
+                              "product_family" => "1404",
+                              "product_group" => "1089"
+                            ),
+                            array(
+                              "item_type" => "M",
+                              "item_name" => "Veggie Burger",
+                              "item_qty" => "2",
+                              "item_amount" => "21.00",
+                              "product_id" => "2100722",
+                              "product_family" => "1404",
+                              "product_group" => "1089"
+                            ),
+                            array(
+                              "item_type" => "D",
+                              "item_name" => "$2 Off a $10 Purchase",
+                              "item_qty" => 1,
+                              "item_amount" => "-2.00",
+                              "product_id" => 10,
+                              "product_family" => 0,
+                              "product_group" => 0
+                            )
+                          )
+                        ));
+$postData->id        = 1;
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $APIURL);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+curl_setopt($ch, CURLOPT_USERAGENT, "ReUpScanner API $subdomain");
+curl_setopt($ch, CURLOPT_USERPWD, $user . ":" . $pass);
+
+// execute the php curl request, json response stored in $content
+$content = trim(curl_exec($ch));
+
+curl_close($ch);
+
+?>
+
+```
+
+```javascript
+
+// subdomain, username, password are selected by merchant during sign up
+var subdomain        = "<your subdomain>";
+var username         = "<username>";
+var password         = "<password>";
+var token            = 'Basic ' + window.btoa(username + ':' + password);
+
+// setup the request
+var apiURL           = "https://api.getreup.com/scanner/V4.0/" + subdomain;
+var postData         = {}            
+postData.jsonrpc     = "2.0";
+postData.method      = "EvaluatePass";
+postData.params      = ["<user_id>", "<pass_id>", "<user_type>", "<hash>",
+                        {
+                          "receipt_datetime": "2016-11-14T12:31:21+00:00",
+                          "subtotal": "22.00",
+                          "items": [
+                            {
+                              "item_type": "M",
+                              "item_name": "Steak Burger",
+                              "item_qty": "3",
+                              "item_amount": "24.00",
+                              "product_id": "2100720",
+                              "product_family": "1404",
+                              "product_group": "1089"
+                            },
+                            {
+                              "item_type": "M",
+                              "item_name": "Veggie Burger",
+                              "item_qty": "2",
+                              "item_amount": "21.00",
+                              "product_id": "2100722",
+                              "product_family": "1404",
+                              "product_group": "1089"
+                            },
+                            {
+                              "item_type": "D",
+                              "item_name": "$2 Off a $10 Purchase",
+                              "item_qty": 1,
+                              "item_amount": "-2.00",
+                              "product_id": 10,
+                              "product_family": 0,
+                              "product_group": 0
+                            }
+                          ]
+                        }];
+postData.id          = 1;
+var headers          = {
+                         'Accept': 'application/json',
+                         'Content-Type': 'application/json',
+                         'Authorization': token
+                       };
+
+// execute the fetch API call
+fetch(apiURL, {
+	method: 'post',
+  headers: headers,
+	body: JSON.stringify(postData)
+}).then(function(response)
+{
+  if (response.status !== 200)
+  {
+    console.log('Looks like there was a problem. Status Code: ' +
+      response.status);
+    return;
+  }
+
+  // Examine the text in the response
+  response.json().then(function(data)
+  {
+    console.log(data);
+  });
+}).catch(function(err)
+{
+  console.log('Fetch Error :-S', err);
+});
+
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "error": {
+    "code": 0,
+    "message": "No Error",
+    "usermsg": "",
+    "AppStoreURL": "apple URL",
+    "PlayStoreURL": ""
+  },
+  "result": {
+    "QualifiedDiscounts": [
+      {
+        "Index": 0,
+        "SKU": "2100722",
+        "Discount": "10.50"
+      }
+    ],
+    "UserName": "no-reply@getreup.com",
+    "FirstName": "ReUp",
+    "LastName": "Scanner",
+    "Credit": "602.57",
+    "PassID": 4,
+    "PassName": "Pass With SKU",
+    "CurrentPassQuantityRemaining": "10",
+    "AfterPassQuantityRemaining": 9
+  },
+  "info": {
+    "Profile": 0.16926693916321
+  },
+  "ID": 1
+}
+```
+
+This endpoint allows the merchant to pass in a PassID along with an invoice and retrieve the potential discounts the user is qualified for. This method does NOT decrement the quantity of the pass. Apply the appropriate discount to the invoice and then execute the RedeemPass method.
+
+### HTTP Request
+
+`POST https://api.getreup.com/client/V4.0/SUBDOMAIN`
+
+### JSON Method Name
+
+`EvaluatePass`
+
+### JSON Parameters
+
+Index | Name | Description
+--------- | ------- | -----------
+0 | User ID | The user ID in the QR code. Decode the "Redeem Reward QR Code" and use the value from the "U" key.
+1 | Pass ID | The ID of the pass the user wishes to redeem for. Decode the "Redeem Pass QR Code" and use the value from the "P" key.
+2 | User Type | For a mobile app user, this is always "U".   For a gift card, this is always "giftcard".
+3 | Hash | A hash unique to this merchant and user. Decode the "Redeem Reward QR Code" and use the value from the "H" key.
+4 | Invoice Details | An object with a key named "items", which is an array of objects each containing at least the keys "product_id" (the SKU), "item_qty" (optional, 1 is used without it), and "item_amount". Feel free to send any additional information in the line items.
+
 ## Get Gift Card Balance
 
 ```php
@@ -1221,215 +1635,6 @@ Index | Name | Description
 1 | Reward ID | The ID of the reward the user wishes to redeem for. Decode the "Redeem Reward QR Code" and use the value from the "R" key.
 2 | User Type | For a mobile app user, this is always "U".   For a gift card, this is always "giftcard".
 3 | Hash | A hash unique to this merchant and user. Decode the "Redeem Reward QR Code" and use the value from the "H" key.
-
-## Evaluate A Reward
-
-```php
-
-<?php
-
-// subdomain, username, password are selected by merchant during sign up
-$subdomain           = "<your subdomain>";
-$user                = "<username>";
-$pass                = "<password>";
-
-// setup the php curl request
-$APIURL              = "https://api.getreup.com/scanner/V4.0/" . $subdomain;
-$postData            = new stdClass();
-$postData->jsonrpc   = "2.0";
-$postData->method    = "EvaluateReward";
-$postData->params    = array("<user_id>", "<reward_id>", "<user_type>", "<hash>",
-                        array(
-                          "receipt_datetime" => "2016-11-14T12:31:21+00:00",
-                          "subtotal" => "22.00",
-                          "items" => array(
-                            array(
-                              "item_type" => "M",
-                              "item_name" => "Steak Burger",
-                              "item_qty" => "3",
-                              "item_amount" => "24.00",
-                              "product_id" => "2100720",
-                              "product_family" => "1404",
-                              "product_group" => "1089"
-                            ),
-                            array(
-                              "item_type" => "M",
-                              "item_name" => "Veggie Burger",
-                              "item_qty" => "2",
-                              "item_amount" => "21.00",
-                              "product_id" => "2100722",
-                              "product_family" => "1404",
-                              "product_group" => "1089"
-                            ),
-                            array(
-                              "item_type" => "D",
-                              "item_name" => "$2 Off a $10 Purchase",
-                              "item_qty" => 1,
-                              "item_amount" => "-2.00",
-                              "product_id" => 10,
-                              "product_family" => 0,
-                              "product_group" => 0
-                            )
-                          )
-                        ));
-$postData->id        = 1;
-
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $APIURL);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-curl_setopt($ch, CURLOPT_POST, 1);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
-curl_setopt($ch, CURLOPT_USERAGENT, "ReUpScanner API $subdomain");
-curl_setopt($ch, CURLOPT_USERPWD, $user . ":" . $pass);
-
-// execute the php curl request, json response stored in $content
-$content = trim(curl_exec($ch));
-
-curl_close($ch);
-
-?>
-
-```
-
-```javascript
-
-// subdomain, username, password are selected by merchant during sign up
-var subdomain        = "<your subdomain>";
-var username         = "<username>";
-var password         = "<password>";
-var token            = 'Basic ' + window.btoa(username + ':' + password);
-
-// setup the request
-var apiURL           = "https://api.getreup.com/scanner/V4.0/" + subdomain;
-var postData         = {}            
-postData.jsonrpc     = "2.0";
-postData.method      = "EvaluateReward";
-postData.params      = ["<user_id>", "<reward_id>", "<user_type>", "<hash>",
-                        {
-                          "receipt_datetime": "2016-11-14T12:31:21+00:00",
-                          "subtotal": "22.00",
-                          "items": [
-                            {
-                              "item_type": "M",
-                              "item_name": "Steak Burger",
-                              "item_qty": "3",
-                              "item_amount": "24.00",
-                              "product_id": "2100720",
-                              "product_family": "1404",
-                              "product_group": "1089"
-                            },
-                            {
-                              "item_type": "M",
-                              "item_name": "Veggie Burger",
-                              "item_qty": "2",
-                              "item_amount": "21.00",
-                              "product_id": "2100722",
-                              "product_family": "1404",
-                              "product_group": "1089"
-                            },
-                            {
-                              "item_type": "D",
-                              "item_name": "$2 Off a $10 Purchase",
-                              "item_qty": 1,
-                              "item_amount": "-2.00",
-                              "product_id": 10,
-                              "product_family": 0,
-                              "product_group": 0
-                            }
-                          ]
-                        }];
-postData.id          = 1;
-var headers          = {
-                         'Accept': 'application/json',
-                         'Content-Type': 'application/json',
-                         'Authorization': token
-                       };
-
-// execute the fetch API call
-fetch(apiURL, {
-	method: 'post',
-  headers: headers,
-	body: JSON.stringify(postData)
-}).then(function(response)
-{
-  if (response.status !== 200)
-  {
-    console.log('Looks like there was a problem. Status Code: ' +
-      response.status);
-    return;
-  }
-
-  // Examine the text in the response
-  response.json().then(function(data)
-  {
-    console.log(data);
-  });
-}).catch(function(err)
-{
-  console.log('Fetch Error :-S', err);
-});
-
-```
-
-> The above command returns JSON structured like this:
-
-```json
-{
-  "jsonrpc": "2.0",
-  "error": {
-    "code": 0,
-    "message": "No Error",
-    "usermsg": ""
-  },
-  "result": {
-    "QualifiedDiscounts": [
-      {
-        "Index": 0,
-        "SKU": "2100720",
-        "Discount": "8.00"
-      },
-      {
-        "Index": 1,
-        "SKU": "2100722",
-        "Discount": "10.50"
-      }
-    ],
-    "RewardID": 20,
-    "RewardName": "Test Reward Name",
-    "UserName": "customer@domain.com",
-    "PointsUsed": "1",
-    "FirstName": "Stephanie",
-    "LastName": "Rogers",
-    "Credit": "302.57",
-    "CurrentPoints": "34",
-    "AfterPoints": 14,
-  },
-  "info": {
-    "Profile": 0.0647549629211
-  },
-  "ID": 1
-}
-```
-
-This endpoint allows the merchant to pass in a RewardID along with an invoice and retrieve the potential discounts the user is qualified for. This method does NOT decrement points. Apply the appropriate discount to the invoice and then execute the RedeemReward method.
-
-### HTTP Request
-
-`POST https://api.getreup.com/client/V4.0/SUBDOMAIN`
-
-### JSON Method Name
-
-`EvaluateReward`
-
-### JSON Parameters
-
-Index | Name | Description
---------- | ------- | -----------
-0 | User ID | The user ID in the QR code. Decode the "Redeem Reward QR Code" and use the value from the "U" key.
-1 | Reward ID | The ID of the reward the user wishes to redeem for. Decode the "Redeem Reward QR Code" and use the value from the "R" key.
-2 | User Type | For a mobile app user, this is always "U".   For a gift card, this is always "giftcard".
-3 | Hash | A hash unique to this merchant and user. Decode the "Redeem Reward QR Code" and use the value from the "H" key.
-4 | Invoice Details | An object with a key named "items", which is an array of objects each containing at least the keys "product_id" (the SKU), "item_qty" (optional, 1 is used without it), and "item_amount". Feel free to send any additional information in the line items.
 
 ## Redeem A Pass
 
