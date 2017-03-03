@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Simple Sidebar - Start Bootstrap Template</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/simple-sidebar.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="#page-content-wrapper">
+                        ReUp
+                    </a>
+                </li>
+                <li>
+                    <a href="#Locations">Locations Retrieval</a>
+                </li>
+                <li>
+                    <a href="#Orders">Active Order Retrieval</a>
+                </li>
+                <li>
+                    <a href="#Ordering">Launching a Location’s Ordering</a>
+                </li>
+                <li>
+                    <a href="#PaymentTypes">Selecting a Payment Type</a>
+                </li>
+                <li>
+                    <a href="#Rewards">Redeeming Rewards</a>
+                </li>
+                <li>
+                    <a href="#CheckingOut">Checking Out</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1>Online Ordering Integration Guidelines</h1>
+<p>This document is to supply guidelines around an integration of online ordering into ReUp custom mobile payment and loyalty apps. It is aimed to discuss overall interface flow and business logic.
+
+    </div>
+      </div>
+      </div>
+      <div id="Locations" class="container-fluid">
+          <div class="row">
+              <div class="col-lg-12">
+                        <h2>Locations Retrieval</h2>
+
+<p>ReUp natively draws and caches location info as needed to the user. To integrate, ReUp will send execute an endpoint with the following parameters:</p>
+<ul>
+  <li>User ID</li>
+  <li>User hash</li>
+  <li>Email</li>
+  <li>First name</li>
+  <li>Last name</li>
+  <li>Payment types</li>
+  <li>Merchant ID</li>
+  <li>Current date time</li>
+</ul>
+
+<p>Payment types will be an array consisting of arrays holding the info of each payment type:</p>
+<ul class="list-unstyled">
+<li>[</li>
+<ul class="list-unstyled">
+  <li>[“&lt;REUP_PAYMENT_TYPE_ID_1&gt;”, “&lt;PAYMENT_NAME_1&gt;”, “&lt;PAYMENT_TYPE_1&gt;”, “&lt;PAYMENT_INFO_1&gt;”],</li>
+  <li>[“&lt;REUP_PAYMENT_TYPE_ID_2&gt;”, “&lt;PAYMENT_NAME_2&gt;”, “&lt;PAYMENT_TYPE_2&gt;”, “&lt;PAYMENT_INFO_2&gt;”],</li>
+  <li>….</li>
+</ul>
+<li>]</li>
+</ul>
+
+<p>To clarify, if a user has a Visa and Master Card connected to their app, and on top of that have $20.00 in their app account, then:</p>
+
+<ul>
+  <li>App Credit ($20.00)</li>
+  <li>Visa (3124)</li>
+  <li>MC (4533)</li>
+</ul>
+
+<p>translates to:</p>
+<ul class="list-unstyled">
+<li>[</li>
+  <li>[“ID1”, “App Credit ($20.00)”, “AC”, “20.00”],</li>
+  <li>[“ID2”, “Visa (3124)”, “V”, “3124”],</li>
+  <li>[“ID3”, “MC (4533)”, “MC”, “3124”]</li>
+<li>]</li>
+</ul>
+
+<p>As a minimum, the locations returned should include:</p>
+<ul>
+  <li>Location ID</li>
+  <li>URL for online ordering for this location</li>
+  <li>Location name</li>
+  <li>Address</li>
+  <li>Latitude</li>
+  <li>Longitude</li>
+  <li>Location hours of operations</li>
+  <li>Active orders or number of active orders at this location</li>
+  <li>User token (only required if only the number of active orders are returned)</li>
+</ul>
+
+<p>While an active order exists, no locations are shown to the user and ordering should be disabled until it is complete.</p>
+</div>
+  </div>
+  </div>
+  <div id="Orders" class="container-fluid">
+      <div class="row">
+          <div class="col-lg-12">
+<h2>Active Order Retrieval</h2>
+
+<p>This function is only needed if the active order information is not returned in the above.</p>
+
+<p>While an order is active, locations are hidden in the app and the current order info is shown on the online ordering page. ReUp natively draws a progress bar along with an active order’s status to the customer. While a customer is on this screen, ReUp polls for active order updates periodically to keep the them up to date.</p>
+
+<p>To retrieve active order information, ReUp will send the following to an end point:</p>
+
+<ul>
+  <li>Location ID</li>
+  <li>User token</li>
+</ul>
+
+<p>The response should at least contain:</p>
+
+<ul>
+  <li>Invoice information</li>
+  <li>Enum of 0, 1 or 2, representing the state of the order</li>
+  <li>Estimated time for the order to be ready</li>
+</ul>
+</div>
+  </div>
+  </div>
+  <div id="Ordering" class="container-fluid">
+      <div class="row">
+          <div class="col-lg-12">
+<h2>Launching a Location’s Ordering</h2>
+
+<p>To order, an app user navigates to the app’s “Order Ahead” screen. On this screen, the locations are listed as described in the “Locations Info” section. The user selects one of the locations and is immediately presented with a single-page ordering website for the selected location. The url used to load this page is the url retrieved when fetching locations above. This url should have all the information to perform the order, including:</p>
+
+<ul>
+  <li>User ID</li>
+  <li>User hash</li>
+  <li>Payment types</li>
+</ul>
+</div>
+  </div>
+  </div>
+  <div id="PaymentTypes" class="container-fluid">
+      <div class="row">
+          <div class="col-lg-12">
+<h2>Selecting a Payment Type</h2>
+
+<p>At checkout, when the app user is paying for their purchase, they are presented with the payment options originally passed in through the POST params when retrieving the locations. An example is shown below:</p>
+
+<div><p><img src="img/Integration-03.png" height="400"></p></div>
+</div>
+  </div>
+  </div>
+  <div id="Rewards" class="container-fluid">
+      <div class="row">
+          <div class="col-lg-12">
+<h2>Redeeming Rewards</h2>
+
+<p>Upon compiling the invoice for to the user, reach out to the ReUp Vendor API with the invoice details to identify any potential rewards. Rewards are linked to SKUs and the method to use is “ValidateReward” with a wild card (*) as the reward ID. This will return all the possible discounts, or QualifiedDiscounts, for an invoice.</p>
+
+<p>For each SKU returned by the ValidateReward method in QualifiedDiscounts, put a line item with an icon beside it to notify the customer that they can redeem this item for a certain number of points. An example of how this would look is shown below:</p>
+
+<div><p><img src="img/Integration-02.png" height="400"></p></div>
+
+<p>When a user selects to redeem the item, a discount or negative line item is added to the invoice and all other QualifiedDiscounts are hidden. Only one item can be redeemed for per invoice.</p>
+
+<div><p><img src="img/Integration-01.png" height="400"></p></div>
+</div>
+  </div>
+  </div>
+  <div id="CheckingOut" class="container-fluid">
+      <div class="row">
+          <div class="col-lg-12">
+<h2>Checking Out</h2>
+
+<p>When the customer hits the “Check Out” button, as shown on the image above, reach out to the ReUp Vendor API to ensure this user can spend this credit or put a hold for that amount on the customer’s credit card.</p>
+
+<p>When the vendor accepts the order, execute the final transaction with the ReUp Vendor API call method UseCreditOnlineOrder, along with the RedeemReward method if a reward was selected.</p>
+
+<p>Either the transaction will succeed or fail.  If the payment has succeeded, the vendor will carry on preparing the order. If the payment fails, the vendor is notified and does not prepare the order.</p>
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Menu Toggle Script -->
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    </script>
+
+</body>
+
+</html>
