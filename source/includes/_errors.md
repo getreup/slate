@@ -1,6 +1,6 @@
 # Errors
 
-The ReUp Scanner API uses the following error codes:
+This API uses the following error codes:
 
 Error Code | String | Description
 ---------- | ------- | -------
@@ -27,9 +27,3 @@ Error Code | String | Description
 -36 |	ERROR_NEGATIVE_TIP | Tip amount entered is less than 0.  Only positive tip amounts are allowed.
 -57 | ERROR_INVALID_SUBDOMAIN | Invalid subdomain (entered during signup) provided.
 -59 | ERROR_INVALID_JSON | Incorrect or malformed JSON request.
-
-
-
-
-
-
