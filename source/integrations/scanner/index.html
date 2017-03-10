@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>ReUp - App Scanner Integration</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/simple-sidebar.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper" style="background-color:#393939">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="#page-content-wrapper">
+                        <img src="http://www.getreup.com/assets/images/reup-logo-high.png" width="100px" style="margin-left: auto; margin-right: auto; display: block; margin-top:15px;">
+                    </a>
+                </li>
+                <li>
+                    <a href="#AppCredit">App Credit Only Transaction</a>
+                </li>
+                <li>
+                    <a href="#AppReward">App Reward Only Transaction</a>
+                </li>
+                <li>
+                    <a href="#AppCreditReward">App Reward + Credit Transaction</a>
+                </li>
+                <li>
+                    <a href="#CheckIn">Check In Only Transaction</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1>App Scanner Integration Guidelines</h1>
+<p>
+  This document is to supply guidelines around an integration of third party
+  scanners for ReUp's custom mobile payment and loyalty apps.
+  It is aimed to discuss overall user interface flow and business logic.
+</p>
+
+<p>
+  In the context of this document, an <b>App</b> refers to a
+  ReUp mobile payments and loyalty iOS or Android app.
+</p>
+
+<p>
+  In the context of this document, the <b>Customer</b> refers to an App user.
+  The Customer has already downloaded the Vendor's app, connected a payment
+  method, and, if live pay is disabled, load credit onto their app.
+</p>
+
+<p>
+  In the context of this document, a <b>Vendor</b> represents a store owner or clerk
+  who is responsible for taking their customer's order. They will be the
+  primary user of the Scanner.
+</p>
+
+<p>
+  In the context of this document, a <b>Scanner</b> refers to the application
+  which scans an App to perform a transaction. A Vendor's Customer presents one
+  of their App's QR codes to be scanned with the Scanner. Context is built into
+  the QR code determining what action the scanner should take. To complete the
+  transaction, the Scanner is to reach out to the ReUp Scanner API, found
+  <a href="http://apidocs.getreup.com/scanner/V4.0/">here</a>.
+</p>
+
+</div>
+</div>
+</div>
+<div id="AppCredit" class="container-fluid"><div class="row"><div class="col-lg-12">
+  <h2>App Credit Only Transaction</h2>
+  <p>
+    The role of the Scanner in an App credit only transaction is to allow the Customer to
+    use their App credit (or in the case of Live Pay, their connected payment
+    method) to purchase goods in store.
+  </p>
+  <p>
+    An App credit only transaction should consist of the following interactions:
+  </p>
+  <div><p><img src="img/Diagram-02.png" height="200"></p></div>
+  <ol type="1">
+
+    <li>
+      Customer's order is taken
+      <ol type="a">
+        <li>Customer communicates their order to the Vendor</li>
+        <li>Vendor inputs their order on the point of sale</li>
+        <li>Vendor communicates the total amount to the Customer</li>
+      </ol>
+    </li>
+
+    <li>
+      Customer presents App for payment
+      <ol type="a">
+        <li>Customer navigates to the Use Credit feature on their App</li>
+        <li>Customer presents the <a href="http://apidocs.getreup.com/scanner/V4.0/#pay-with-credit">Use Credit QR Code</a></li>
+        <li>Vendor scans the QR code with their Scanner</li>
+      </ol>
+    </li>
+
+    <li>
+      Vendor executes transaction
+      <ol type="a">
+        <li>
+          If the POS and Scanner are not integrated, the Vendor inputs the total
+          dollar amount on the Scanner.
+        </li>
+        <li>Scanner performs the
+          <a href="http://apidocs.getreup.com/scanner/V4.0/#pay-with-credit16">UseCredit</a>
+          method on the ReUp Scanner API
+        </li>
+        <li>
+          If the transaction is a success, the purchase has been paid for
+          and the Vendor should now supply the Customer with their order.
+        </li>
+        <li>
+          If the transaction fails, the Vendor should communicate this to the
+          Customer by supplying their current credit amount compared to how much the
+          goods cost.
+        </li>
+      </ol>
+    </li>
+  </ol>
+
+  <p>
+    During each step above, the Vendor should be supplied with sufficient and
+    very obvious information about the transaction, so they can properly
+    communicate that to the Customer.
+  </p>
+</div></div></div>
+
+<div id="AppReward" class="container-fluid"><div class="row"><div class="col-lg-12">
+  <h2>App Reward Only Transaction</h2>
+  <p>
+    The role of the Scanner in a reward only transaction is to allow the Customer to
+    redeem their App points for predetermined goods or discounts in store.
+  </p>
+  <p>
+    An App reward only transaction should consist of the following interactions:
+  </p>
+  <div><p><img src="img/Diagram-02.png" height="200"></p></div>
+  <ol type="1">
+    <li>
+      Customer's order is taken
+      <ol type="a">
+        <li>Customer communicates their order to the Vendor</li>
+        <li>Vendor inputs their order on the point of sale</li>
+        <li>A product linked with the intended reward should be on the invoice</li>
+      </ol>
+    </li>
+
+    <li>
+      Customer requests to redeem a reward
+      <ol type="a">
+        <li>Customer navigates to the Redeem Reward feature on their App</li>
+        <li>Customer selects the intended reward from the list</li>
+        <li>Customer presents the <a href="http://apidocs.getreup.com/scanner/V4.0/#redeem-reward">Redeem Reward QR Code</a></li>
+        <li>Vendor scans the QR code with their Scanner</li>
+        <li>
+          If the POS and Scanner are integrated, the Vendor passes the reward
+          and invoice to the ReUp Scanner API via
+          <a href="http://apidocs.getreup.com/scanner/V4.0/#evaluate-a-reward">EvaluateReward</a>
+          and applies a negative line item representing one of the returned
+          Qualified Discounts.
+        </li>
+      </ol>
+    </li>
+
+    <li>
+      Vendor executes transaction
+      <ol type="a">
+        <li>
+          When the Customer is ready to pay, the Scanner redeems the reward by
+          calling the <a href="http://apidocs.getreup.com/scanner/V4.0/#redeem-a-reward">RedeemReward</a>
+          method in the ReUp Scanner API
+        </li>
+        <li>
+          If the transaction is a success, the points have been decremented and
+          the Customer can now pay the Vendor for the rest of the invoice if needed.
+        </li>
+        <li>
+          If the transaction fails, the Vendor should communicate this to the
+          Customer by supplying their current points amount compared to how much the
+          reward costs.
+        </li>
+      </ol>
+    </li>
+  </ol>
+
+  <p>
+    In the case where goods are not linked to ReUp rewards (ie EvaluateReward is
+    not called), the Vendor must have knowledge of exactly what goods are
+    to be redeem. Reward redemptions are limited to one per invoice.
+  </p>
+</div></div></div>
+
+<div id="AppCreditReward" class="container-fluid"><div class="row"><div class="col-lg-12">
+  <h2>App Reward + Credit Transaction</h2>
+  <p>
+    The role of the Scanner in an App reward + credit transaction is to allow
+    the Customer to redeem their App points for predetermined goods or discounts
+    and pay for the rest of their invoice with their App.
+  </p>
+  <p>
+    An App reward + credit transaction should consist of the following interactions:
+  </p>
+  <div><p><img src="img/Diagram-02.png" height="200"></p></div>
+  <ol type="1">
+    <li>
+      Customer's order is taken
+      <ol type="a">
+        <li>Customer communicates their order to the Vendor</li>
+        <li>Vendor inputs their order on the point of sale</li>
+        <li>A product linked with the intended reward should be on the invoice</li>
+      </ol>
+    </li>
+
+    <li>
+      Customer requests to redeem a reward
+      <ol type="a">
+        <li>Customer navigates to the Redeem Reward feature on their App</li>
+        <li>Customer selects the intended reward from the list</li>
+        <li>Customer presents the <a href="http://apidocs.getreup.com/scanner/V4.0/#redeem-reward">Redeem Reward QR Code</a></li>
+        <li>Vendor scans the QR code with their Scanner</li>
+        <li>
+          If the POS and Scanner are integrated, the Vendor passes the reward
+          and invoice to the ReUp Scanner API via
+          <a href="http://apidocs.getreup.com/scanner/V4.0/#evaluate-a-reward">EvaluateReward</a>
+          and applies a negative line item representing one of the returned
+          Qualified Discounts.
+        </li>
+      </ol>
+    </li>
+
+    <li>
+      Customer presents App for payment (optional if the POS and Scanner are integrated)
+      <ol type="a">
+        <li>Customer navigates to the Use Credit feature on their App</li>
+        <li>Customer presents the <a href="http://apidocs.getreup.com/scanner/V4.0/#pay-with-credit">Use Credit QR Code</a></li>
+        <li>Vendor scans the QR code with their Scanner</li>
+      </ol>
+    </li>
+
+    <li>
+      Vendor executes transaction
+      <ol type="a">
+        <li>
+          When the Customer is ready to pay, the Scanner redeems the reward by
+          calling the <a href="http://apidocs.getreup.com/scanner/V4.0/#redeem-a-reward">RedeemReward</a>
+          method in the ReUp Scanner API
+        </li>
+        <li>
+          If the transaction is a success, the points have been decremented and
+          the Customer has redeemed for the reward.
+        </li>
+        <li>
+          If the transaction fails, the Vendor should communicate this to the
+          Customer by supplying their current points amount compared to how much the
+          reward costs.
+        </li>
+        <li>
+          If the POS and Scanner are not integrated, the Vendor inputs the total
+          dollar amount minus the reward cost on the Scanner.
+        </li>
+        <li>
+          Scanner performs the
+          <a href="http://apidocs.getreup.com/scanner/V4.0/#pay-with-credit16">UseCredit</a>
+          method on the ReUp Scanner API.
+        </li>
+        <li>
+          If the transaction is a success, the purchase has been paid for
+          and the Vendor should now supply the Customer with their order.
+        </li>
+        <li>
+          If the transaction fails, the Vendor should communicate this to the
+          Customer by supplying their current credit amount compared to how much the
+          goods cost.
+        </li>
+      </ol>
+    </li>
+  </ol>
+
+  <p>
+    In the case where goods are not linked to ReUp rewards (ie EvaluateReward is
+    not called), the Vendor must have knowledge of exactly what goods are
+    to be redeem. Reward redemptions are limited to one per invoice.
+
+    For the case of when the Scanner is integrated with the POS, it is possible
+    to do this transaction with only one scan, since the Redeem Reward QR Code
+    holds sufficient information to do both transactions.
+  </p>
+</div></div></div>
+
+<div id="CheckIn" class="container-fluid"><div class="row"><div class="col-lg-12">
+  <h2>Check In Only Transaction</h2>
+  <p>
+    The role of the Scanner in an App check in only transaction is to allow the
+    Customer to collect points on a purchase without using their App to pay.
+  </p>
+  <p>
+    An App check in only transaction should consist of the following interactions:
+  </p>
+  <div><p><img src="img/Diagram-02.png" height="200"></p></div>
+  <ol type="1">
+
+    <li>
+      Customer's order is taken
+      <ol type="a">
+        <li>Customer communicates their order to the Vendor</li>
+        <li>Vendor inputs their order on the point of sale</li>
+        <li>Vendor communicates the total amount to the Customer</li>
+      </ol>
+    </li>
+
+    <li>
+      Customer presents App for check in
+      <ol type="a">
+        <li>Customer navigates to the Check In feature on their App</li>
+        <li>Customer presents the <a href="http://apidocs.getreup.com/scanner/V4.0/#check-in">Check In QR Code</a></li>
+        <li>Vendor scans the QR code with their Scanner</li>
+      </ol>
+    </li>
+
+    <li>
+      Vendor executes transaction
+      <ol type="a">
+        <li>
+          The Customer pays for their goods however they like.
+        </li>
+        <li>
+          If the POS and Scanner are not integrated, the Vendor inputs the total
+          dollar amount on the Scanner.
+        </li>
+        <li>Scanner performs the
+          <a href="http://apidocs.getreup.com/scanner/V4.0/#check-in-points-only">CheckIn</a>
+          method on the ReUp Scanner API
+        </li>
+      </ol>
+    </li>
+  </ol>
+
+  <p>
+    Note that this is to only be called during a points only transaction. Do not
+    call the <a href="http://apidocs.getreup.com/scanner/V4.0/#check-in-points-only">CheckIn</a>
+    method if the Customer is is paying with their App credit.
+  </p>
+</div></div></div>
+
+
+
+
+
+      </div>
+      <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Menu Toggle Script -->
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    </script>
+
+</body>
+
+</html>

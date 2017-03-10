@@ -218,6 +218,29 @@ U | User ID | The gift card ID, unique to every gift card account.
 T | Type | Always "GC" to signify that this is a gift card and not a mobile app user.
 H | Hash | A unique security hash used to authenticate this gift card-merchant pairing.
 
+## Check-In
+
+The "Check-In" QR Code is used by customers wanting to pay for their invoice without
+their app credit, but still earn points. The customer would select the Check-In feature
+within the app and scan the QR code, for example:
+
+![Check-In QR Code](scanner/V4.0/CheckInQRCode.png)
+
+Above QR Code Source:
+
+eyJBcHBJRCI6IjEyMzQ1IiwiVHlwZSI6ImNoZWNraW4iLCJVIjoiMTAwMCIsIkgiOiI5YTEyM2E0NGFiIn0=
+
+Base 64 Decoded QR Code Source:
+
+{"AppID":"12345","Type":"checkin","U":"1000","H":"9a123a44ab"}
+
+Key | Name | Description
+--------- | ----------- | -----------
+AppID | App ID | The unique App ID assigned to this app.  Each merchant has an App ID.
+Type | QR Code Type | The type of QR code being scanned (e.g. reward)
+U | User ID | The user ID, unique to every customer account.
+H | Hash | A unique security hash used to authenticate this customer-merchant pairing.
+
 # Retrieving Information
 
 The calls in this section are used to retrieve information on the merchant or the gift card presented by the customer.

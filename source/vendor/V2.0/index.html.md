@@ -1,5 +1,5 @@
 ---
-title: ReUp Scanner API Reference
+title: ReUp Vendor API Reference
 
 language_tabs:
   - php
