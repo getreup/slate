@@ -40,16 +40,19 @@
                     </a>
                 </li>
                 <li>
-                    <a href="#AppCredit">App Credit Only Transaction</a>
+                    <a href="#AppCredit">App Credit Only</a>
                 </li>
                 <li>
-                    <a href="#AppReward">App Reward Only Transaction</a>
+                    <a href="#AppReward">App Reward Only</a>
                 </li>
                 <li>
-                    <a href="#AppCreditReward">App Reward + Credit Transaction</a>
+                    <a href="#AppCreditReward">App Reward + Credit</a>
                 </li>
                 <li>
-                    <a href="#CheckIn">Check In Only Transaction</a>
+                    <a href="#CheckIn">Check In Only</a>
+                </li>
+                <li>
+                    <a href="#GiftCardAdd">Add Credit To Gift Card</a>
                 </li>
             </ul>
         </div>
@@ -97,7 +100,7 @@
 </div>
 </div>
 <div id="AppCredit" class="container-fluid"><div class="row"><div class="col-lg-12">
-  <h2>App Credit Only Transaction</h2>
+  <h2>App Credit Only</h2>
   <p>
     The role of the Scanner in an App credit only transaction is to allow the Customer to
     use their App credit (or in the case of Live Pay, their connected payment
@@ -106,7 +109,7 @@
   <p>
     An App credit only transaction should consist of the following interactions:
   </p>
-  <div><p><img src="img/Diagram-02.png" height="200"></p></div>
+  <div><p><img src="img/pay.png" height="200"></p></div>
   <ol type="1">
 
     <li>
@@ -159,7 +162,7 @@
 </div></div></div>
 
 <div id="AppReward" class="container-fluid"><div class="row"><div class="col-lg-12">
-  <h2>App Reward Only Transaction</h2>
+  <h2>App Reward Only</h2>
   <p>
     The role of the Scanner in a reward only transaction is to allow the Customer to
     redeem their App points for predetermined goods or discounts in store.
@@ -167,7 +170,7 @@
   <p>
     An App reward only transaction should consist of the following interactions:
   </p>
-  <div><p><img src="img/Diagram-02.png" height="200"></p></div>
+  <div><p><img src="img/reward.png" height="200"></p></div>
   <ol type="1">
     <li>
       Customer's order is taken
@@ -219,12 +222,12 @@
   <p>
     In the case where goods are not linked to ReUp rewards (ie EvaluateReward is
     not called), the Vendor must have knowledge of exactly what goods are
-    to be redeem. Reward redemptions are limited to one per invoice.
+    to be redeemed for. Reward redemptions are limited to one per invoice.
   </p>
 </div></div></div>
 
 <div id="AppCreditReward" class="container-fluid"><div class="row"><div class="col-lg-12">
-  <h2>App Reward + Credit Transaction</h2>
+  <h2>App Reward + Credit</h2>
   <p>
     The role of the Scanner in an App reward + credit transaction is to allow
     the Customer to redeem their App points for predetermined goods or discounts
@@ -233,7 +236,7 @@
   <p>
     An App reward + credit transaction should consist of the following interactions:
   </p>
-  <div><p><img src="img/Diagram-02.png" height="200"></p></div>
+  <div><p><img src="img/rewardpay.png" height="200"></p></div>
   <ol type="1">
     <li>
       Customer's order is taken
@@ -312,7 +315,7 @@
   <p>
     In the case where goods are not linked to ReUp rewards (ie EvaluateReward is
     not called), the Vendor must have knowledge of exactly what goods are
-    to be redeem. Reward redemptions are limited to one per invoice.
+    to be redeemed for. Reward redemptions are limited to one per invoice.
 
     For the case of when the Scanner is integrated with the POS, it is possible
     to do this transaction with only one scan, since the Redeem Reward QR Code
@@ -321,7 +324,7 @@
 </div></div></div>
 
 <div id="CheckIn" class="container-fluid"><div class="row"><div class="col-lg-12">
-  <h2>Check In Only Transaction</h2>
+  <h2>Check In Only</h2>
   <p>
     The role of the Scanner in an App check in only transaction is to allow the
     Customer to collect points on a purchase without using their App to pay.
@@ -329,7 +332,7 @@
   <p>
     An App check in only transaction should consist of the following interactions:
   </p>
-  <div><p><img src="img/Diagram-02.png" height="200"></p></div>
+  <div><p><img src="img/checkin.png" height="200"></p></div>
   <ol type="1">
 
     <li>
@@ -371,11 +374,129 @@
   <p>
     Note that this is to only be called during a points only transaction. Do not
     call the <a href="http://apidocs.getreup.com/scanner/V4.0/#check-in-points-only">CheckIn</a>
-    method if the Customer is is paying with their App credit.
+    method if the Customer is is paying with their App credit. However, if a
+    Customer is only paying for a portion of an invoice with their App credit,
+    please call <a href="http://apidocs.getreup.com/scanner/V4.0/#check-in-points-only">CheckIn</a>
+    on the remainder.
   </p>
 </div></div></div>
 
+<div id="AppPass" class="container-fluid"><div class="row"><div class="col-lg-12">
+  <h2>App Pass Only</h2>
+  <p>
+    A ReUp pass allows Customers to purchase items in bulk and redeem for them
+    at their own convenience. Think buying 10 coffees for the price of 8.
+    The role of the Scanner in a pass only transaction is to decrement the
+    quantity remaining on a Customer's pass so the Vendor can present the
+    goods.
+  </p>
+  <p>
+    An App pass reward only transaction should consist of the following interactions:
+  </p>
+  <div><p><img src="img/pass.png" height="200"></p></div>
+  <ol type="1">
+    <li>
+      Customer's order is taken
+      <ol type="a">
+        <li>Customer communicates their order to the Vendor</li>
+        <li>Vendor inputs their order on the point of sale</li>
+        <li>A product linked with the intended pass should be on the invoice</li>
+      </ol>
+    </li>
 
+    <li>
+      Customer requests to redeem a pass
+      <ol type="a">
+        <li>Customer navigates to the Redeem Pass feature on their App</li>
+        <li>Customer selects the intended pass from the list</li>
+        <li>Customer presents the <a href="http://apidocs.getreup.com/scanner/V4.0/#redeem-pass">Redeem Pass QR Code</a></li>
+        <li>Vendor scans the QR code with their Scanner</li>
+        <li>
+          If the POS and Scanner are integrated, the Vendor passes the pass
+          and invoice to the ReUp Scanner API via
+          <a href="http://apidocs.getreup.com/scanner/V4.0/#evaluate-a-pass">EvaluatePass</a>
+          and applies a negative line item representing one of the returned
+          Qualified Discounts.
+        </li>
+      </ol>
+    </li>
+
+    <li>
+      Vendor executes transaction
+      <ol type="a">
+        <li>
+          When the Customer is ready to pay, the Scanner redeems the pass by
+          calling the <a href="http://apidocs.getreup.com/scanner/V4.0/#redeem-a-pass">RedeemPass</a>
+          method in the ReUp Scanner API
+        </li>
+        <li>
+          If the transaction is a success, the pass count has been decremented and
+          the Customer can now pay the Vendor for the rest of the invoice if needed.
+        </li>
+        <li>
+          If the transaction fails, the Vendor should communicate this to the
+          Customer by telling them their pass has been depleted.
+        </li>
+      </ol>
+    </li>
+  </ol>
+
+  <p>
+    In the case where goods are not linked to a ReUp pass (ie EvaluatePass is
+    not called), the Vendor must have knowledge of exactly what goods are
+    to be redeemed for. Pass redemptions are limited to one per invoice.
+  </p>
+</div></div></div>
+
+<div id="GiftCardAdd" class="container-fluid"><div class="row"><div class="col-lg-12">
+  <h2>Add Credit To Gift Card</h2>
+  <p>
+    The role of the Scanner here is to identify the Customer, and when the Vendor
+    takes payment, the Scanner then adds the dollar amount onto the gift card.
+  </p>
+  <p>
+    Adding credit to a gift card should consist of the following interactions:
+  </p>
+  <div><p><img src="img/giftcard.png" height="200"></p></div>
+  <ol type="1">
+    <li>
+      Customer's pays for the desired amount of credit
+      <ol type="a">
+        <li>Customer communicates their total amount to the Vendor</li>
+        <li>Vendor inputs their order on the point of sale</li>
+        <li>Vendor takes payment for the total amount</li>
+      </ol>
+    </li>
+
+    <li>
+      Customer reveals the gift card QR code (optionally, the Vendor could supply a brand new gift card)
+      <ol type="a">
+        <li>Vendor scans the <a href="http://apidocs.getreup.com/scanner/V4.0/#gift-card">Gift Card QR Code</a> with the Scanner</li>
+        <li>Scanner gets the gift card info by calling <a href="http://apidocs.getreup.com/scanner/V4.0/#get-gift-card-balance">GetGCUser</a></li>
+        <li>Vendor is shown all gift card info and can communicate it to the Customer</li>
+      </ol>
+    </li>
+
+    <li>
+      Vendor adds credit to gift card
+      <ol type="a">
+        <li>
+          If the Scanner is not integrated with the POS, Vendor inputs dollar amount
+          into the Scanner
+        </li>
+        <li>
+          Scanner performs
+          <a href="http://apidocs.getreup.com/scanner/V4.0/#add-credit-to-gift-card">AddCreditGiftCard</a>
+          method on the ReUp Scanner API
+        </li>
+      </ol>
+    </li>
+  </ol>
+
+  <p>
+    Gift cards earn points just like any App user.
+  </p>
+</div></div></div>
 
 
 
