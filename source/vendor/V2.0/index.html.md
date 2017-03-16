@@ -283,7 +283,7 @@ $apiKey              = "<apiKey>";
 $APIURL              = "https://api.getreup.com/vendor/V2.0/" . $subdomain;
 $postData            = new stdClass();
 $postData->jsonrpc   = "2.0";
-$postData->method    = "GetFeatures";
+$postData->method    = "GetRewards";
 $postData->params    = array();
 $postData->id        = 1;
 
@@ -315,7 +315,7 @@ var token            = 'Basic ' + window.btoa(appID + ':' + apiKey);
 var apiURL           = "https://api.getreup.com/vendor/V2.0/" + subdomain;
 var postData         = {}            
 postData.jsonrpc     = "2.0";
-postData.method      = "GetFeatures";
+postData.method      = "GetRewards";
 postData.params      = [];
 postData.id          = 1;
 var headers          = {
@@ -616,7 +616,142 @@ Index | Name | Description
 3 | Hash | A hash unique to this merchant and user. This is passed to the third party from ReUp during an integration interaction.
 4 | Invoice Details | An object with a key named "items", which is an array of objects each containing at least the keys "product_id" (the SKU), "item_qty" (optional, 1 is used without it), and "item_amount". Feel free to send any additional information in the line items.
 
-## Retrieve List of Rewards
+## Get List of Payment Methods
+
+```php
+
+<?php
+
+// appID is generated when a client signs up, while the api key will be distributed manually
+$appID               = "<appID>";
+$apiKey              = "<apiKey>";
+
+// setup the php curl request
+$APIURL              = "https://api.getreup.com/vendor/V2.0/" . $subdomain;
+$postData            = new stdClass();
+$postData->jsonrpc   = "2.0";
+$postData->method    = "GetPaymentMethods";
+$postData->params    = array("<user_id>", "<user_hash>");
+$postData->id        = 1;
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $APIURL);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+curl_setopt($ch, CURLOPT_USERAGENT, "ReUpVendor API $appID");
+curl_setopt($ch, CURLOPT_USERPWD, $appID . ":" . $apiKey);
+
+// execute the php curl request, json response stored in $content
+$content = trim(curl_exec($ch));
+
+curl_close($ch);
+
+?>
+
+```
+
+```javascript
+
+// appID is generated when a client signs up, while the api key will be distributed manually
+var appID            = "<appID>";
+var apiKey           = "<apiKey>";
+var token            = 'Basic ' + window.btoa(appID + ':' + apiKey);
+
+// setup the request
+var apiURL           = "https://api.getreup.com/vendor/V2.0/" + subdomain;
+var postData         = {}            
+postData.jsonrpc     = "2.0";
+postData.method      = "GetPaymentMethods";
+postData.params      = ["<user_id>", "<user_hash>"];
+postData.id          = 1;
+var headers          = {
+                         'Accept': 'application/json',
+                         'Content-Type': 'application/json',
+                         'Authorization': token
+                       };
+
+// execute the fetch API call
+fetch(apiURL, {
+	method: 'post',
+  headers: headers,
+	body: JSON.stringify(postData)
+}).then(function(response)
+{
+  if (response.status !== 200)
+  {
+    console.log('Looks like there was a problem. Status Code: ' +
+      response.status);
+    return;
+  }
+
+  // Examine the text in the response
+  response.json().then(function(data)
+  {
+    console.log(data);
+  });
+}).catch(function(err)
+{
+  console.log('Fetch Error :-S', err);
+});
+
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "error": {
+    "code": 0,
+    "message": "No Error",
+    "usermsg": "",
+    "AppStoreURL": "apple URL",
+    "PlayStoreURL": ""
+  },
+  "result": [
+    [
+      "APP_CREDIT",
+      "App Credit (65.50)",
+      "App Credit",
+      "65.50"
+    ],
+    [
+      "card_19y5E82xFkHYcVLujndH63Xb",
+      "VISA (4242)",
+      "VISA",
+      "4242"
+    ]
+  ],
+  "info": {
+    "Profile": 0.09302806854248
+  },
+  "ID": 1
+}
+```
+
+This method returns a list of payment methods that are compatible with AuthorizePayment and
+MakePayment. The response is an array of arrays, where the first response is always
+"App Credit" (as long as the Vendor has set up app credit payments). Each payment method
+consists of ["<payment_method_id", "<payment_method_name>", "<payment_method_type>", "<payment_method_info>"], where payment_method_info is either the remaining amount of app credit or the last four digits
+for a credit card.
+
+### HTTP Request
+
+`POST https://api.getreup.com/vendr/V2.0/`
+
+### JSON Method Name
+
+`GetPaymentMethods`
+
+### JSON Parameters
+
+Index | Name | Description
+--------- | ------- | -----------
+0 | User ID | The user ID of the end user. This is passed to the third party from ReUp during an integration interaction.
+1 | Hash | A hash unique to this merchant and user. This is passed to the third party from ReUp during an integration interaction.
+
+## Get App Info
 
 ```php
 

@@ -215,7 +215,9 @@
 <p>
   At checkout, when the app user is paying for their purchase, they are
   presented with the payment options originally passed in through the POST
-  params when retrieving the locations. An example is shown below:
+  params when retrieving the locations, or alternatively can be fetched from the api via the
+  <a href="http://apidocs.getreup.com/vendor/V2.0/#get-list-of-payment-methods">GetPaymentMethods</a>
+  call. An example is shown below:
 </p>
 
 <div><p><img src="img/Integration-03.png" height="400"></p></div>
@@ -227,7 +229,8 @@
 <h2>Redeeming Rewards</h2>
 
 <p>
-  Upon compiling the invoice for to the user, reach out to the <a href="http://apidocs.getreup.com/vendor/V2.0/">ReUp Vendor API</a>
+  Upon compiling the invoice for to the user, reach out to the
+  <a href="http://apidocs.getreup.com/vendor/V2.0/">ReUp Vendor API</a>
   with the invoice details to identify any potential rewards. Rewards are linked
   to SKUs and the method to use is
   <a href="http://apidocs.getreup.com/vendor/V2.0/#evaluate-a-reward">EvaluateReward</a>
