@@ -869,6 +869,133 @@ This method returns some configuration data for the client, including the "Dolla
 
 This method takes zero parameters.
 
+## Get User
+
+```php
+
+<?php
+
+// appID is generated when a client signs up, while the api key will be distributed manually
+$appID               = "<appID>";
+$apiKey              = "<apiKey>";
+
+// setup the php curl request
+$APIURL              = "https://api.getreup.com/vendor/V2.0/" . $subdomain;
+$postData            = new stdClass();
+$postData->jsonrpc   = "2.0";
+$postData->method    = "GetUser";
+$postData->params    = array("<user_id>", "<user_hash>");
+$postData->id        = 1;
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $APIURL);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+curl_setopt($ch, CURLOPT_USERAGENT, "ReUpVendor API $appID");
+curl_setopt($ch, CURLOPT_USERPWD, $appID . ":" . $apiKey);
+
+// execute the php curl request, json response stored in $content
+$content = trim(curl_exec($ch));
+
+curl_close($ch);
+
+?>
+
+```
+
+```javascript
+
+// appID is generated when a client signs up, while the api key will be distributed manually
+var appID            = "<appID>";
+var apiKey           = "<apiKey>";
+var token            = 'Basic ' + window.btoa(appID + ':' + apiKey);
+
+// setup the request
+var apiURL           = "https://api.getreup.com/vendor/V2.0/" + subdomain;
+var postData         = {}            
+postData.jsonrpc     = "2.0";
+postData.method      = "GetUser";
+postData.params      = ["<user_id>", "<user_hash>"];
+postData.id          = 1;
+var headers          = {
+                         'Accept': 'application/json',
+                         'Content-Type': 'application/json',
+                         'Authorization': token
+                       };
+
+// execute the fetch API call
+fetch(apiURL, {
+	method: 'post',
+  headers: headers,
+	body: JSON.stringify(postData)
+}).then(function(response)
+{
+  if (response.status !== 200)
+  {
+    console.log('Looks like there was a problem. Status Code: ' +
+      response.status);
+    return;
+  }
+
+  // Examine the text in the response
+  response.json().then(function(data)
+  {
+    console.log(data);
+  });
+}).catch(function(err)
+{
+  console.log('Fetch Error :-S', err);
+});
+
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "error": {
+    "code": 0,
+    "message": "No Error",
+    "usermsg": "",
+    "AppStoreURL": "apple URL",
+    "PlayStoreURL": ""
+  },
+  "result": {
+    "UserID": "1",
+    "UserName": "someemail@adomain.com",
+    "FirstName": "Sterling",
+    "LastName": "Archer",
+    "DOB": "1980-01-01",
+    "ProfileURL": "",
+    "Credit": "0.00",
+    "Points": "0"
+  },
+  "info": {
+    "Profile": 0.1165509223938
+  },
+  "ID": 1
+}
+```
+
+This method returns some configuration data for the client, including the "DollarsPerPoint" they have set up in the dashboard.
+
+### HTTP Request
+
+`POST https://api.getreup.com/vendor/V2.0/`
+
+### JSON Method Name
+
+`GetUser`
+
+### JSON Parameters
+
+Index | Name | Description
+--------- | ------- | -----------
+0 | User ID | The user ID of the end user. This is passed to the third party from ReUp during an integration interaction.
+1 | Hash | A hash unique to this merchant and user. This is passed to the third party from ReUp during an integration interaction.
+
 # Gift Card Interactions
 
 ## Get Gift Card Info
