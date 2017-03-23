@@ -1036,7 +1036,7 @@ $apiKey              = "<apiKey>";
 $APIURL              = "https://api.getreup.com/vendor/V2.0/";
 $postData            = new stdClass();
 $postData->jsonrpc   = "2.0";
-$postData->method    = "GetGCInfo";
+$postData->method    = "RegisterGC";
 $postData->params    = array("<gift_card_number>", "<gift_card_pin>", "<email>", "<full_name>");
 $postData->id        = 1;
 
@@ -1068,7 +1068,7 @@ var token            = 'Basic ' + window.btoa(appID + ':' + apiKey);
 var apiURL           = "https://api.getreup.com/vendor/V2.0/";
 var postData         = {}            
 postData.jsonrpc     = "2.0";
-postData.method      = "GetGCInfo";
+postData.method      = "RegisterGC";
 postData.params      = ["<gift_card_number>", "<gift_card_pin>", "<email>", "<full_name>"];
 postData.id          = 1;
 var headers          = {
