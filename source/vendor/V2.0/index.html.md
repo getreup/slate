@@ -391,7 +391,7 @@ This method returns a list of active rewards set by the merchant. This is primar
 
 ### HTTP Request
 
-`POST https://api.getreup.com/vendr/V2.0/`
+`POST https://api.getreup.com/vendor/V2.0/`
 
 ### JSON Method Name
 
@@ -738,7 +738,7 @@ for a credit card.
 
 ### HTTP Request
 
-`POST https://api.getreup.com/vendr/V2.0/`
+`POST https://api.getreup.com/vendor/V2.0/`
 
 ### JSON Method Name
 
@@ -859,7 +859,7 @@ This method returns some configuration data for the client, including the "Dolla
 
 ### HTTP Request
 
-`POST https://api.getreup.com/vendr/V2.0/`
+`POST https://api.getreup.com/vendor/V2.0/`
 
 ### JSON Method Name
 
