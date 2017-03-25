@@ -1503,7 +1503,9 @@ fetch(apiURL, {
     },
     "result": {
         "UserName": "no-reply@getreup.com",
-        "CreditUsed": "10.25"
+        "CreditUsed": "10.25",
+        "PointsEarned": 1,
+        "TransactionID": "425"
     },
     "info": {
         "Profile": 2.429417848587
@@ -1531,6 +1533,212 @@ Index | Name | Description
 2 | Amount | The amount in dollars (i.e. X.YZ) of credit the customer wishes to use.
 3 | Payment Method ID | This encapsulates app credit, credit card, or any other method of payment. To retrieve this, either have ReUp pass it in via integration, or call the GetPaymentMethods method for a particuar user.
 4 | Invoice | A JSON string representing an invoice's details. This is stored for analytics and debugging.
+
+## Refund Transaction
+
+```php
+
+<?php
+
+// appID is generated when a client signs up, while the api key will be distributed manually
+$appID               = "<appID>";
+$apiKey              = "<apiKey>";
+
+// setup the php curl request
+$APIURL              = "https://api.getreup.com/vendor/V2.0/";
+$postData            = new stdClass();
+$postData->jsonrpc   = "2.0";
+$postData->method    = "RefundTransaction";
+$postData->params    = array("<transaction_id>");
+$postData->id        = 1;
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $APIURL);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+curl_setopt($ch, CURLOPT_USERAGENT, "ReUpVendor API $appID");
+curl_setopt($ch, CURLOPT_USERPWD, $appID . ":" . $apiKey);
+
+// execute the php curl request, json response stored in $content
+$content = trim(curl_exec($ch));
+
+curl_close($ch);
+
+?>
+
+```
+
+```javascript
+
+// appID is generated when a client signs up, while the api key will be distributed manually
+var appID            = "<appID>";
+var apiKey           = "<apiKey>";
+var token            = 'Basic ' + window.btoa(appID + ':' + apiKey);
+
+// setup the request
+var apiURL           = "https://api.getreup.com/vendor/V2.0/";
+var postData         = {}            
+postData.jsonrpc     = "2.0";
+postData.method      = "RefundTransaction";
+postData.params      = ["<transaction_id>"];
+postData.id          = 1;
+var headers          = {
+                         'Accept': 'application/json',
+                         'Content-Type': 'application/json',
+                         'Authorization': token
+                       };
+
+// execute the fetch API call
+fetch(apiURL, {
+	method: 'post',
+  headers: headers,
+	body: JSON.stringify(postData)
+}).then(function(response)
+{
+  if (response.status !== 200)
+  {
+    console.log('Looks like there was a problem. Status Code: ' +
+      response.status);
+    return;
+  }
+
+  // Examine the text in the response
+  response.json().then(function(data)
+  {
+    console.log(data);
+  });
+}).catch(function(err)
+{
+  console.log('Fetch Error :-S', err);
+});
+
+```
+
+> The above command returns JSON structured like this:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "error": {
+    "code": 0,
+    "message": "No Error",
+    "usermsg": "",
+    "AppStoreURL": "apple URL",
+    "PlayStoreURL": ""
+  },
+  "result": {
+    "UserName": "no-reply@getreup.com",
+    "CreditRefunded": "10.00",
+    "PointsRefunded": -1,
+    "FirstName": "ReUp",
+    "LastName": "Scanner",
+    "CurrentCredit": "106.00",
+    "CurrentPoints": "24",
+    "RefundedTransactions": [
+      {
+        "TransactionID": "425",
+        "RelatedTransactionIDs": "424,426",
+        "UserID": "1",
+        "Credit": "-10.00",
+        "Subtotal": "0.00",
+        "TipTotal": "0.00",
+        "Tip": "0.00",
+        "TipType": "",
+        "Points": "0",
+        "IsCredit": "1",
+        "Source": "13",
+        "SegmentActionID": "-1",
+        "TransPaymentInfo": null,
+        "Refunded": "1",
+        "RewardID": "",
+        "RewardName": "",
+        "LocationID": "-1",
+        "PassID": "-1",
+        "PassName": "",
+        "PassQuantityRemaining": "-1",
+        "TransactionFee": "0.00",
+        "ServiceFee": "0.00",
+        "ScannerID": "-1",
+        "Timestamp": "2017-03-25 04:42:59"
+      },
+      {
+        "TransactionID": "424",
+        "RelatedTransactionIDs": "425,426",
+        "UserID": "1",
+        "Credit": "10.00",
+        "Subtotal": "0.00",
+        "TipTotal": "0.00",
+        "Tip": "0.00",
+        "TipType": "",
+        "Points": "0",
+        "IsCredit": "1",
+        "Source": "1",
+        "SegmentActionID": "-1",
+        "TransPaymentInfo": "{\"sourceType\":\"stripecc\",\"last4\":\"4242\",\"cardType\":\"1\",\"isPrimary\":true,\"cardID\":\"card_1A14aV2xFkHYcVLul4JyYpbk\",\"expMonth\":\"12\",\"expYear\":\"2020\",\"id\":\"ch_1A16j72xFkHYcVLuhUvxzEGU\"}",
+        "Refunded": "1",
+        "RewardID": "",
+        "RewardName": "",
+        "LocationID": "-1",
+        "PassID": "-1",
+        "PassName": "",
+        "PassQuantityRemaining": "-1",
+        "TransactionFee": "0.10",
+        "ServiceFee": "0.00",
+        "ScannerID": "-1",
+        "Timestamp": "2017-03-25 04:42:58"
+      },
+      {
+        "TransactionID": "426",
+        "RelatedTransactionIDs": "425,424",
+        "UserID": "1",
+        "Credit": "0.00",
+        "Subtotal": "0.00",
+        "TipTotal": "0.00",
+        "Tip": "0.00",
+        "TipType": "",
+        "Points": "1",
+        "IsCredit": "0",
+        "Source": "16",
+        "SegmentActionID": "-1",
+        "TransPaymentInfo": null,
+        "Refunded": "1",
+        "RewardID": "",
+        "RewardName": "",
+        "LocationID": "-1",
+        "PassID": "-1",
+        "PassName": "",
+        "PassQuantityRemaining": "-1",
+        "TransactionFee": "0.00",
+        "ServiceFee": "0.00",
+        "ScannerID": "-1",
+        "Timestamp": "2017-03-25 04:42:59"
+      }
+    ]
+  },
+  "info": {
+    "Profile": 1.4347729682922
+  },
+  "ID": 1
+}
+```
+
+This endpoint allows the vendor to pass in a transaction ID and refund it along with all related transactions.
+
+### HTTP Request
+
+`POST https://api.getreup.com/vendor/V2.0/`
+
+### JSON Method Name
+
+`RefundTransaction`
+
+### JSON Parameters
+
+Index | Name | Description
+--------- | ------- | -----------
+0 | Transaction ID | The transaction ID to be refunded. This is returned from the MakePayment method.
+
 
 ## Redeem A Reward
 
