@@ -57,6 +57,18 @@
                 <li>
                     <a href="#GiftCardAdd">Add Credit To Gift Card</a>
                 </li>
+                <li>
+                    <a href="#GiftCardCredit">Gift Card Credit Only</a>
+                </li>
+                <li>
+                    <a href="#GiftCardReward">Gift Card Reward Only</a>
+                </li>
+                <li>
+                    <a href="#GiftCardCreditReward">Gift Card Reward + Credit</a>
+                </li>
+                <li>
+                    <a href="#GiftCardCheckIn">Gift Card Check In</a>
+                </li>
             </ul>
         </div>
         <!-- /#sidebar-wrapper -->
@@ -79,6 +91,16 @@
 </p>
 
 <p>
+  In the context of this document, a <b>Gift Card</b> refers to a
+  gift card provided by ReUp. Gift Cards hold credit and points just like an App.
+  On the back of these gift cards, there is a
+  QR code, pin number and gift card number. For the purpose of all transactions
+  in this document, to identify the Gift Card, the Gift Card's QR code is
+  scanned. Please see <a href="http://apidocs.getreup.com/scanner/V4.0/#gift-card">
+  this</a> for more information on the Gift Card's QR code.
+</p>
+
+<p>
   In the context of this document, the <b>Customer</b> refers to an App user.
   The Customer has already downloaded the Vendor's app, connected a payment
   method, and, if live pay is disabled, load credit onto their app.
@@ -97,6 +119,19 @@
   the QR code determining what action the scanner should take. To complete the
   transaction, the Scanner is to reach out to the ReUp Scanner API, found
   <a href="http://apidocs.getreup.com/scanner/V4.0/">here</a>.
+</p>
+
+<p>
+  In the context of this document, a <b>Reward</b> represents an item with a
+  name, description, point cost and external SKU (which is used to map to 3rd
+  party invoice line items). These can be redeemed for by Apps and Gift Cards
+  that have enough points.
+</p>
+
+<p>
+  In the context of this document, a <b>Qualified Discount</b> represents the
+  resulting discount from a Reward that an App or Gift Card has enough points to
+  redeem.
 </p>
 
 </div>
@@ -138,7 +173,7 @@
       <ol type="a">
         <li>
           If the POS and Scanner are not integrated, the Vendor inputs the total
-          dollar amount on the Scanner.
+          dollar amount on the Scanner
         </li>
         <li>Scanner performs the
           <a href="http://apidocs.getreup.com/scanner/V4.0/#pay-with-credit16">UseCredit</a>
@@ -146,12 +181,12 @@
         </li>
         <li>
           If the transaction is a success, the purchase has been paid for
-          and the Vendor should now supply the Customer with their order.
+          and the Vendor should now supply the Customer with their order
         </li>
         <li>
           If the transaction fails, the Vendor should communicate this to the
           Customer by supplying their current credit amount compared to how much the
-          goods cost.
+          goods cost
         </li>
       </ol>
     </li>
@@ -196,7 +231,7 @@
           and invoice to the ReUp Scanner API via
           <a href="http://apidocs.getreup.com/scanner/V4.0/#evaluate-a-reward">EvaluateReward</a>
           and applies a negative line item representing one of the returned
-          Qualified Discounts.
+          Qualified Discounts
         </li>
       </ol>
     </li>
@@ -211,12 +246,12 @@
         </li>
         <li>
           If the transaction is a success, the points have been decremented and
-          the Customer can now pay the Vendor for the rest of the invoice if needed.
+          the Customer can now pay the Vendor for the rest of the invoice if needed
         </li>
         <li>
           If the transaction fails, the Vendor should communicate this to the
           Customer by supplying their current points amount compared to how much the
-          reward costs.
+          reward costs
         </li>
       </ol>
     </li>
@@ -286,30 +321,30 @@
         </li>
         <li>
           If the transaction is a success, the points have been decremented and
-          the Customer has redeemed for the reward.
+          the Customer has redeemed for the reward
         </li>
         <li>
           If the transaction fails, the Vendor should communicate this to the
           Customer by supplying their current points amount compared to how much the
-          reward costs.
+          reward costs
         </li>
         <li>
           If the POS and Scanner are not integrated, the Vendor inputs the total
-          dollar amount minus the reward cost on the Scanner.
+          dollar amount minus the reward cost on the Scanner
         </li>
         <li>
           Scanner performs the
           <a href="http://apidocs.getreup.com/scanner/V4.0/#pay-with-credit16">UseCredit</a>
-          method on the ReUp Scanner API.
+          method on the ReUp Scanner API
         </li>
         <li>
           If the transaction is a success, the purchase has been paid for
-          and the Vendor should now supply the Customer with their order.
+          and the Vendor should now supply the Customer with their order
         </li>
         <li>
           If the transaction fails, the Vendor should communicate this to the
           Customer by supplying their current credit amount compared to how much the
-          goods cost.
+          goods cost
         </li>
       </ol>
     </li>
@@ -360,11 +395,11 @@
       Vendor executes transaction
       <ol type="a">
         <li>
-          The Customer pays for their goods however they like.
+          The Customer pays for their goods however they like
         </li>
         <li>
           If the POS and Scanner are not integrated, the Vendor inputs the total
-          dollar amount on the Scanner.
+          dollar amount on the Scanner
         </li>
         <li>Scanner performs the
           <a href="http://apidocs.getreup.com/scanner/V4.0/#check-in-points-only">CheckIn</a>
@@ -377,7 +412,7 @@
   <p>
     Note that this is to only be called during a points only transaction. Do not
     call the <a href="http://apidocs.getreup.com/scanner/V4.0/#check-in-points-only">CheckIn</a>
-    method if the Customer is is paying with their App credit. However, if a
+    method if the Customer is paying with their App credit. However, if a
     Customer is only paying for a portion of an invoice with their App credit,
     please call <a href="http://apidocs.getreup.com/scanner/V4.0/#check-in-points-only">CheckIn</a>
     on the remainder.
@@ -419,7 +454,7 @@
           and invoice to the ReUp Scanner API via
           <a href="http://apidocs.getreup.com/scanner/V4.0/#evaluate-a-pass">EvaluatePass</a>
           and applies a negative line item representing one of the returned
-          Qualified Discounts.
+          Qualified Discounts
         </li>
       </ol>
     </li>
@@ -434,11 +469,11 @@
         </li>
         <li>
           If the transaction is a success, the pass count has been decremented and
-          the Customer can now pay the Vendor for the rest of the invoice if needed.
+          the Customer can now pay the Vendor for the rest of the invoice if needed
         </li>
         <li>
           If the transaction fails, the Vendor should communicate this to the
-          Customer by telling them their pass has been depleted.
+          Customer by telling them their pass has been depleted
         </li>
       </ol>
     </li>
@@ -501,7 +536,292 @@
   </p>
 </div></div></div>
 
+<div id="GiftCardCredit" class="container-fluid"><div class="row"><div class="col-lg-12">
+  <h2>Gift Card Credit Only</h2>
+  <p>
+    The role of the Scanner in a Gift Card credit only transaction is to allow the Customer to
+    use their Gift Card credit to purchase goods in store.
+  </p>
+  <p>
+    A Gift Card credit only transaction should consist of the following interactions:
+  </p>
+  <div><p><img src="img/giftcard_pay.png" height="200"></p></div>
+  <ol type="1">
 
+    <li>
+      Customer's order is taken
+      <ol type="a">
+        <li>Customer communicates their order to the Vendor</li>
+        <li>Vendor inputs their order on the point of sale</li>
+        <li>Vendor communicates the total amount to the Customer</li>
+      </ol>
+    </li>
+
+    <li>
+      Customer presents Gift Card for payment
+      <ol type="a">
+        <li>Customer presents the <a href="http://apidocs.getreup.com/scanner/V4.0/#gift-card">Gift Card QR Code</a></li>
+        <li>Vendor scans the QR code with their Scanner</li>
+      </ol>
+    </li>
+
+    <li>
+      Vendor executes transaction
+      <ol type="a">
+        <li>
+          If the POS and Scanner are not integrated, the Vendor inputs the total
+          dollar amount on the Scanner
+        </li>
+        <li>Scanner performs the
+          <a href="http://apidocs.getreup.com/scanner/V4.0/#pay-with-credit16">UseCredit</a>
+          method on the ReUp Scanner API
+        </li>
+        <li>
+          If the transaction is a success, the purchase has been paid for
+          and the Vendor should now supply the Customer with their order
+        </li>
+        <li>
+          If the transaction fails, the Vendor should communicate this to the
+          Customer by supplying their current credit amount compared to how much the
+          goods cost
+        </li>
+      </ol>
+    </li>
+  </ol>
+
+  <p>
+    During each step above, the Vendor should be supplied with sufficient and
+    very obvious information about the transaction, so they can properly
+    communicate that to the Customer.
+  </p>
+</div></div></div>
+
+<div id="GiftCardReward" class="container-fluid"><div class="row"><div class="col-lg-12">
+  <h2>Gift Card Reward Only</h2>
+  <p>
+    The role of the Scanner in a Gift Card reward only transaction is to ensure
+    the gift card qualifies for the requested reward, then allow the Customer to
+    redeem their Gift Card points for predetermined goods or discounts in store.
+  </p>
+  <p>
+    A Gift Card reward only transaction should consist of the following interactions:
+  </p>
+  <div><p><img src="img/giftcard_reward.png" height="200"></p></div>
+  <ol type="1">
+    <li>
+      Customer's order is taken
+      <ol type="a">
+        <li>Customer communicates their order to the Vendor</li>
+        <li>Vendor inputs their order on the point of sale</li>
+        <li>A product linked with the intended reward should be on the invoice</li>
+      </ol>
+    </li>
+
+    <li>
+      Customer requests to redeem a reward
+      <ol type="a">
+        <li>Customer presents the <a href="http://apidocs.getreup.com/scanner/V4.0/#gift-card">Gift Card QR Code</a></li>
+        <li>Vendor scans the QR code with their Scanner</li>
+        <li>
+          If the POS and Scanner are integrated, the Vendor passes a "*" as the
+          Reward ID and the invoice to the ReUp Scanner API via
+          <a href="http://apidocs.getreup.com/scanner/V4.0/#evaluate-a-reward">EvaluateReward</a>
+        </li>
+        <li>
+          If the POS and Scanner are integrated, the Vendor is now presented with
+          a list of Qualified Discounts. If the Reward the Customer wished to
+          redeem for is in the list, the Vendor selects that discount and the
+          related discount is applied as a negative line item. Alternatively,
+          the POS may automatically choose the smallest or largest discount
+          available to simplifiy the process.
+        </li>
+      </ol>
+    </li>
+
+    <li>
+      Vendor executes transaction
+      <ol type="a">
+        <li>
+          When the Customer is ready to pay, the Scanner redeems the reward by
+          calling the <a href="http://apidocs.getreup.com/scanner/V4.0/#redeem-a-reward">RedeemReward</a>
+          method in the ReUp Scanner API.
+        </li>
+        <li>
+          If the transaction is a success, the points have been decremented and
+          the Customer can now pay the Vendor for the rest of the invoice if needed.
+        </li>
+        <li>
+          If the transaction fails, the Vendor should communicate this to the
+          Customer by supplying their current points amount compared to how much the
+          reward costs.
+        </li>
+      </ol>
+    </li>
+  </ol>
+
+  <p>
+    In the case where goods are not linked to ReUp rewards (ie EvaluateReward is
+    not called), the Vendor must have knowledge of exactly what goods are
+    to be redeemed for. Reward redemptions are limited to one per invoice.
+  </p>
+</div></div></div>
+
+<div id="GiftCardCreditReward" class="container-fluid"><div class="row"><div class="col-lg-12">
+  <h2>Gift Card Reward + Credit</h2>
+  <p>
+    The role of the Scanner in a Gift Card reward + credit transaction is to allow
+    the Customer to redeem their Gift Card points for predetermined goods or discounts
+    and pay for the rest of their invoice with their Gift Card as well.
+  </p>
+  <p>
+    A Gift Card reward + credit transaction should consist of the following interactions:
+  </p>
+  <div><p><img src="img/giftcard_rewardpay.png" height="200"></p></div>
+  <ol type="1">
+    <li>
+      Customer's order is taken
+      <ol type="a">
+        <li>Customer communicates their order to the Vendor</li>
+        <li>Vendor inputs their order on the point of sale</li>
+        <li>A product linked with the intended reward should be on the invoice</li>
+      </ol>
+    </li>
+
+    <li>
+      Customer requests to redeem a reward
+      <ol type="a">
+        <li>Customer presents the <a href="http://apidocs.getreup.com/scanner/V4.0/#gift-card">Gift Card QR Code</a></li>
+        <li>Vendor scans the QR code with their Scanner</li>
+        <li>
+          If the POS and Scanner are integrated, the Vendor passes a "*" as the
+          Reward ID and the invoice to the ReUp Scanner API via
+          <a href="http://apidocs.getreup.com/scanner/V4.0/#evaluate-a-reward">EvaluateReward</a>
+        </li>
+        <li>
+          If the POS and Scanner are integrated, the Vendor is now presented with
+          a list of Qualified Discounts. If the Reward the Customer wished to
+          redeem for is in the list, the Vendor selects that discount and the
+          related discount is applied as a negative line item. Alternatively,
+          the POS may automatically choose the smallest or largest discount
+          available to simplifiy the process.
+        </li>
+      </ol>
+    </li>
+
+    <li>
+      Customer presents Gift Card for payment (no need to scan again if the POS and Scanner are integrated)
+      <ol type="a">
+        <li>Customer presents the <a href="http://apidocs.getreup.com/scanner/V4.0/#gift-card">Gift Card QR Code</a></li>
+        <li>Vendor scans the QR code with their Scanner</li>
+      </ol>
+    </li>
+
+    <li>
+      Vendor executes transaction
+      <ol type="a">
+        <li>
+          When the Customer is ready to pay, the Scanner redeems the reward by
+          calling the <a href="http://apidocs.getreup.com/scanner/V4.0/#redeem-a-reward">RedeemReward</a>
+          method in the ReUp Scanner API.
+        </li>
+        <li>
+          If the transaction is a success, the points have been decremented and
+          the Customer has redeemed for the reward.
+        </li>
+        <li>
+          If the transaction fails, the Vendor should communicate this to the
+          Customer by supplying their current points amount compared to how much the
+          reward costs.
+        </li>
+        <li>
+          If the POS and Scanner are not integrated, the Vendor inputs the total
+          dollar amount minus the reward cost on the Scanner.
+        </li>
+        <li>
+          Scanner performs the
+          <a href="http://apidocs.getreup.com/scanner/V4.0/#pay-with-credit16">UseCredit</a>
+          method on the ReUp Scanner API.
+        </li>
+        <li>
+          If the transaction is a success, the purchase has been paid for
+          and the Vendor should now supply the Customer with their order.
+        </li>
+        <li>
+          If the transaction fails, the Vendor should communicate this to the
+          Customer by supplying their current credit amount compared to how much the
+          goods cost.
+        </li>
+      </ol>
+    </li>
+  </ol>
+
+  <p>
+    In the case where goods are not linked to ReUp rewards (ie EvaluateReward is
+    not called), the Vendor must have knowledge of exactly what goods are
+    to be redeemed for. Reward redemptions are limited to one per invoice.
+
+    For the case of when the Scanner is integrated with the POS, it is possible
+    to do this transaction with only one scan, since the Gift Card QR Code
+    holds sufficient information to do both transactions.
+  </p>
+</div></div></div>
+
+<div id="GiftCardCheckIn" class="container-fluid"><div class="row"><div class="col-lg-12">
+  <h2>Gift Card Check In Only</h2>
+  <p>
+    The role of the Scanner in a Gift Card check in only transaction is to allow the
+    Customer to collect points on a purchase without using their Gift Card to pay.
+  </p>
+  <p>
+    A Gift Card check in only transaction should consist of the following interactions:
+  </p>
+  <div><p><img src="img/giftcard_checkin.png" height="200"></p></div>
+  <ol type="1">
+
+    <li>
+      Customer's order is taken
+      <ol type="a">
+        <li>Customer communicates their order to the Vendor</li>
+        <li>Vendor inputs their order on the point of sale</li>
+        <li>Vendor communicates the total amount to the Customer</li>
+      </ol>
+    </li>
+
+    <li>
+      Customer presents Gift Card for check in
+      <ol type="a">
+        <li>Customer presents the <a href="http://apidocs.getreup.com/scanner/V4.0/#gift-card">Gift Card QR Code</a>.</li>
+        <li>Vendor scans the QR code with their Scanner.</li>
+      </ol>
+    </li>
+
+    <li>
+      Vendor executes transaction
+      <ol type="a">
+        <li>
+          The Customer pays for their goods however they like.
+        </li>
+        <li>
+          If the POS and Scanner are not integrated, the Vendor inputs the total
+          dollar amount on the Scanner.
+        </li>
+        <li>Scanner performs the
+          <a href="http://apidocs.getreup.com/scanner/V4.0/#check-in-points-only">CheckIn</a>
+          method on the ReUp Scanner API.
+        </li>
+      </ol>
+    </li>
+  </ol>
+
+  <p>
+    Note that this is to only be called during a points only transaction. Do not
+    call the <a href="http://apidocs.getreup.com/scanner/V4.0/#check-in-points-only">CheckIn</a>
+    method if the Customer is paying with their Gift Card credit. However, if a
+    Customer is only paying for a portion of an invoice with their App credit,
+    please call <a href="http://apidocs.getreup.com/scanner/V4.0/#check-in-points-only">CheckIn</a>
+    on the remainder.
+  </p>
+</div></div></div>
 
       </div>
       <!-- /#page-content-wrapper -->
